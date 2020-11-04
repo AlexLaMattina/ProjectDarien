@@ -2,6 +2,8 @@ import dash
 import flask
 import numpy as np
 from collections import defaultdict
+
+from pandas import DataFrame
 from plotly.graph_objs import Scattermapbox
 from flask import Flask
 import dash_core_components as dcc
@@ -11,6 +13,7 @@ import plotly.graph_objs as go
 import chart_studio.plotly as py
 py.sign_in('alexlamattina', 'WMl4yDvoKm1xPWk9Wjxx')
 import pandas as pd
+import plotly.express as px
 
 mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjaXhzYTB0bHcwOHNoMnFtOWZ3YWdreDB3In0.pjROwb9_CEuyKPE-x0lRUw'
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
@@ -641,30 +644,42 @@ fig.append_trace(go.Scatter(
 #SPLIT UP DATA BY DATE
 date1lon = []
 date1lat = []
+date1id=[]
 date2lon = []
 date2lat = []
+date2id=[]
 date3lon = []
 date3lat = []
+date3id=[]
 date4lon = []
 date4lat = []
+date4id=[]
 date5lon = []
 date5lat = []
+date5id=[]
 for i in pf.index:
     if pf['date'][i] == '9/03/2020':
         date1lon.append(pf['LON'][i])
         date1lat.append(pf['LAT'][i])
+        date1id.append(pf['id'][i])
     if pf['date'][i] == '9/11/2020':
         date2lon.append(pf['LON'][i])
         date2lat.append(pf['LAT'][i])
+        date2id.append(pf['id'][i])
     if pf['date'][i] == '9/16/2020':
         date3lon.append(pf['LON'][i])
         date3lat.append(pf['LAT'][i])
+        date3id.append(pf['id'][i])
     if pf['date'][i] == '9/22/2020':
         date4lon.append(pf['LON'][i])
         date4lat.append(pf['LAT'][i])
+        date4id.append(pf['id'][i])
     if pf['date'][i] == '9/28/2020':
         date5lon.append(pf['LON'][i])
         date5lat.append(pf['LAT'][i])
+        date5id.append(pf['id'][i])
+
+
 trace1=Scattermapbox(
     name ="Buildings",
     mode = "markers",
@@ -683,12 +698,13 @@ trace1=Scattermapbox(
     ),
 )
 
+date1df = DataFrame(date1id,columns=['ID'])
 trace2 = Scattermapbox(
     name="People",
     mode="markers",
     lon=date1lat,
     lat=date1lon,
-    text=pf['id'],
+    text="ID: " + date1df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -700,12 +716,13 @@ trace2 = Scattermapbox(
     ),
 
 )
+date2df = DataFrame(date2id,columns=['ID'])
 trace3 = Scattermapbox(
     name="People",
     mode="markers",
     lon=date2lat,
     lat=date2lon,
-    text=pf['id'],
+    text="ID: "+ date2df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -717,12 +734,13 @@ trace3 = Scattermapbox(
     ),
 
 )
+date3df = DataFrame(date3id,columns=['ID'])
 trace4 = Scattermapbox(
     name="People",
     mode="markers",
     lon=date3lat,
     lat=date3lon,
-    text=pf['id'],
+    text="ID: "+ date3df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -734,12 +752,13 @@ trace4 = Scattermapbox(
     ),
 
 )
+date4df = DataFrame(date4id,columns=['ID'])
 trace5 = Scattermapbox(
     name="People",
     mode="markers",
     lon=date4lat,
     lat=date4lon,
-    text=pf['id'],
+    text="ID: " + date4df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -751,12 +770,13 @@ trace5 = Scattermapbox(
     ),
 
 )
+date5df = DataFrame(date5id,columns=['ID'])
 trace6 = Scattermapbox(
     name="People",
     mode="markers",
     lon=date5lat,
     lat=date5lon,
-    text=pf['id'],
+    text="ID: " + date5df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -768,12 +788,6 @@ trace6 = Scattermapbox(
     ),
 
 )
-
-
-
-
-
-
 
 #Do not touch
 sliders = dict(
@@ -887,7 +901,6 @@ fig.update_layout(
 )
 layout =dict(
     title="COVID-19 Modeling Data",
-
     autosize = True,
 
     margin = dict(
@@ -920,29 +933,23 @@ layout =dict(
 
 )
 #have to add back in buildings
-data = [trace1, trace2, trace3, trace4,trace5, trace6]
+data = [trace2, trace3, trace4,trace5, trace6]
 figure = go.Figure(data=data, layout=layout)
 steps=[]
 num_steps=5
 for i in range(num_steps):
-    # Hide all traces
     step = dict(
         label=dates[i],
         method='restyle',
-        args=['visible', [False] * (len(figure.data)-1)],
+        args=['visible', [False] * (len(figure.data))],
 
     )
-    # Enable the two traces we want to see
     step['args'][1][i] = True
-    #step['args'][1][i + num_steps] = True
 
-    # Add step to step list
     steps.append(step)
 sliders1 = [dict(
     steps =steps,
 )]
-
-
 
 
 figure.layout.sliders = sliders1

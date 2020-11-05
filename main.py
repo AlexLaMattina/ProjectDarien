@@ -2,7 +2,6 @@ import dash
 import flask
 import numpy as np
 from collections import defaultdict
-
 from pandas import DataFrame
 from plotly.graph_objs import Scattermapbox
 from flask import Flask
@@ -13,10 +12,8 @@ import plotly.graph_objs as go
 import chart_studio.plotly as py
 py.sign_in('alexlamattina', 'WMl4yDvoKm1xPWk9Wjxx')
 import pandas as pd
-import plotly.express as px
 
 mapbox_access_token = 'pk.eyJ1IjoiamFja2x1byIsImEiOiJjaXhzYTB0bHcwOHNoMnFtOWZ3YWdreDB3In0.pjROwb9_CEuyKPE-x0lRUw'
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = flask.Flask(__name__)
@@ -260,7 +257,6 @@ for d, a in numofexposednose.items():
           numexposednoses.append(i)
   numexposednoselist.append(numexposednoses.count(1))
   numexposednoses=[]
-
 exposednoselist=[]
 exposednoselist=pd.Series(numexposednoselist, index=dates)
 masktrace = []

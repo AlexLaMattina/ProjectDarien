@@ -19,7 +19,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = flask.Flask(__name__)
 
 url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/BuildingData.csv'
-url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/COVID-19%20Data.csv'
+url2 = 'https://raw.githubusercontent.com/AlexLaMattina/COVID-19-Modeling/main/Data.csv'
 url3='https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
@@ -147,7 +147,6 @@ withmasklist=pd.Series(numwithmasklist, index=dates)
 masktrace = []
 for i in range(len(dates)):
     masktrace.append(withmasklist.get(key=dates[i]))
-    print(masktrace)
     fig.append_trace(go.Scatter(
         hovertext="People With Masks",
         name="",
@@ -173,7 +172,6 @@ withnomasklist=pd.Series(numwithnomasklist, index=dates)
 masktrace = []
 for i in range(len(dates)):
     masktrace.append(withnomasklist.get(key=dates[i]))
-    print(masktrace)
     fig.append_trace(go.Scatter(
         hovertext="People Without Masks",
         name="",
@@ -205,7 +203,6 @@ correctmasklist=pd.Series(numcorrectmasklist, index=dates)
 masktrace = []
 for i in range(len(dates)):
     masktrace.append(correctmasklist.get(key=dates[i]))
-    print(masktrace)
     fig.append_trace(go.Scatter(
         hovertext="People Wearing Masks Correctly",
         name="",
@@ -230,7 +227,6 @@ incorrectmasklist=pd.Series(numincorrectmasklist, index=dates)
 masktrace = []
 for i in range(len(dates)):
     masktrace.append(incorrectmasklist.get(key=dates[i]))
-    print(masktrace)
     fig.append_trace(go.Scatter(
         hovertext="People Wearing Masks Inorrectly",
         name="",
@@ -721,29 +717,44 @@ date4id=[]
 date5lon = []
 date5lat = []
 date5id=[]
+date6lon = []
+date6lat = []
+date6id=[]
+date7lon = []
+date7lat = []
+date7id=[]
+
 for i in pf.index:
-    if pf['date'][i] == '9/03/2020':
+    if pf['date'][i] == '8/24/2020':
         date1lon.append(pf['LON'][i])
         date1lat.append(pf['LAT'][i])
         date1id.append(pf['id'][i])
-    if pf['date'][i] == '9/11/2020':
+    if pf['date'][i] == '8/24/2020':
         date2lon.append(pf['LON'][i])
         date2lat.append(pf['LAT'][i])
         date2id.append(pf['id'][i])
-    if pf['date'][i] == '9/16/2020':
+    if pf['date'][i] == '9/03/2020':
         date3lon.append(pf['LON'][i])
         date3lat.append(pf['LAT'][i])
         date3id.append(pf['id'][i])
-    if pf['date'][i] == '9/22/2020':
+    if pf['date'][i] == '9/11/2020':
         date4lon.append(pf['LON'][i])
         date4lat.append(pf['LAT'][i])
         date4id.append(pf['id'][i])
-    if pf['date'][i] == '9/28/2020':
+    if pf['date'][i] == '9/16/2020':
         date5lon.append(pf['LON'][i])
         date5lat.append(pf['LAT'][i])
         date5id.append(pf['id'][i])
+    if pf['date'][i] == '9/22/2020':
+        date6lon.append(pf['LON'][i])
+        date6lat.append(pf['LAT'][i])
+        date6id.append(pf['id'][i])
+    if pf['date'][i] == '9/28/2020':
+        date7lon.append(pf['LON'][i])
+        date7lat.append(pf['LAT'][i])
+        date7id.append(pf['id'][i])
 
-
+print(date3id)
 trace1=Scattermapbox(
     name ="Buildings",
     mode = "markers",
@@ -761,10 +772,9 @@ trace1=Scattermapbox(
 
     ),
 )
-
 date1df = DataFrame(date1id,columns=['ID'])
 trace2 = Scattermapbox(
-    name="9/03/2020 Data",
+    name="8/20/2020 Data",
     mode="markers",
     lon=date1lat,
     lat=date1lon,
@@ -782,11 +792,11 @@ trace2 = Scattermapbox(
 )
 date2df = DataFrame(date2id,columns=['ID'])
 trace3 = Scattermapbox(
-    name="9/11/2020 Data",
+    name="8/24/2020 Data",
     mode="markers",
     lon=date2lat,
     lat=date2lon,
-    text="ID: "+ date2df['ID'].astype(str),
+    text="ID: " + date2df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -800,11 +810,11 @@ trace3 = Scattermapbox(
 )
 date3df = DataFrame(date3id,columns=['ID'])
 trace4 = Scattermapbox(
-    name="9/16/2020 Data",
+    name="9/03/2020 Data",
     mode="markers",
     lon=date3lat,
     lat=date3lon,
-    text="ID: "+ date3df['ID'].astype(str),
+    text="ID: " + date3df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -818,11 +828,11 @@ trace4 = Scattermapbox(
 )
 date4df = DataFrame(date4id,columns=['ID'])
 trace5 = Scattermapbox(
-    name="9/22/2020 Data",
+    name="9/11/2020 Data",
     mode="markers",
     lon=date4lat,
     lat=date4lon,
-    text="ID: " + date4df['ID'].astype(str),
+    text="ID: "+ date4df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -836,11 +846,47 @@ trace5 = Scattermapbox(
 )
 date5df = DataFrame(date5id,columns=['ID'])
 trace6 = Scattermapbox(
-    name="9/28/2020 Data",
+    name="9/16/2020 Data",
     mode="markers",
     lon=date5lat,
     lat=date5lon,
-    text="ID: " + date5df['ID'].astype(str),
+    text="ID: "+ date5df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='red',
+        opacity=0.6
+    ),
+
+)
+date6df = DataFrame(date6id,columns=['ID'])
+trace7 = Scattermapbox(
+    name="9/22/2020 Data",
+    mode="markers",
+    lon=date6lat,
+    lat=date6lon,
+    text="ID: " + date6df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='red',
+        opacity=0.6
+    ),
+
+)
+date7df = DataFrame(date7id,columns=['ID'])
+trace8 = Scattermapbox(
+    name="9/28/2020 Data",
+    mode="markers",
+    lon=date7lat,
+    lat=date7lon,
+    text="ID: " + date7df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -997,11 +1043,11 @@ layout =dict(
 
 )
 #have to add back in buildings
-data = [trace1,trace2, trace3, trace4,trace5, trace6]
-labels=["Buildings", "9/03/2020","9/11/2020","9/16/2020","9/22/2020","9/28/2020"]
+data = [trace1,trace2, trace3, trace4,trace5, trace6, trace7, trace8]
+labels=["Buildings", "8/20/2020","8/24/2020","9/03/2020","9/11/2020","9/16/2020","9/22/2020","9/28/2020"]
 figure = go.Figure(data=data, layout=layout)
 steps=[]
-num_steps=6
+num_steps=8
 for i in range(num_steps):
     step = dict(
         label=labels[i],
@@ -1024,7 +1070,7 @@ sliders1 = [dict(
 
 )]
 steps=[]
-num_steps = 5
+num_steps = 7
 for i in range(num_steps):
     step=dict(
         label=dates[i],

@@ -694,11 +694,6 @@ for i in range(num_steps):
 
 slidersfig=[dict(steps=steps,)]
 
-#fig.layout.sliders=slidersfig
-
-
-
-
 ###########################################################################
 
 #SPLIT UP DATA BY DATE
@@ -754,7 +749,6 @@ for i in pf.index:
         date7lat.append(pf['LAT'][i])
         date7id.append(pf['id'][i])
 
-print(date3id)
 trace1=Scattermapbox(
     name ="Buildings",
     mode = "markers",
@@ -899,97 +893,6 @@ trace8 = Scattermapbox(
 
 )
 
-#Do not touch
-sliders = dict(
-    active=0,
-    steps=[],
-    currentvalue=dict(
-        font=dict(size=16),
-        prefix="Date : ",
-        xanchor="right",
-        visible=True,
-    ),
-    transition=dict(
-        duration=300,
-        easing="cubic-in-out",
-    ),
-    # PLACEMENT
-    x=0.1,
-    y=0,
-    pad=dict(t=40, b=10),
-    len=0.9,
-    xanchor="left",
-    yanchor="top",
-)
-#Do not touch
-for date in dates:
-    slider_step = dict(
-
-        # GENERAL
-        method="animate",
-        value=date,
-        label=date,
-
-        # ARGUMENTS
-        args=[
-            [date],
-            dict(
-                frame=dict(duration=1000, redraw=False),
-                transition=dict(duration=300),
-                mode="immediate",
-            ),
-        ],
-
-    )
-    sliders["steps"].append(slider_step)
-
-
-
-updatemenus = dict(
-
-    # GENERAL
-    type="buttons",
-    showactive=False,
-    x=0.1,
-    y=0,
-    pad=dict(t=40, r=125),
-    xanchor="right",
-    yanchor="top",
-    direction="left",
-
-    buttons=[
-        dict(
-            method="animate",
-            label="Play",
-            # PLAY
-            args=[
-                None,
-                dict(
-                    frame=dict(duration=300, redraw=False),
-                    fromcurrent=True,
-                    transition=dict(duration=300, easing="quadratic-in-out"),
-                    mode="immediate",
-                ),
-            ],
-        ),
-        dict(
-            method="animate",
-            label="Pause",
-            # PAUSE
-            args=[
-                [None],  # Note the list
-                dict(
-                    frame=dict(duration=0, redraw=False),  # Idem
-                    mode="immediate",
-                    transition=dict(duration=0),
-                ),
-            ],
-        ),
-    ],
-)
-
-
-
 fig.update_layout(
     autosize=True,
     # plot_bgcolor="#191A1A",
@@ -1001,12 +904,10 @@ fig.update_layout(
         r=100,
         pad=2,
     ),
-    #sliders=[sliders],
     showlegend=False,
     hovermode="x unified",
 
-    #sliders=[sliders],
-    #updatemenus=[updatemenus],
+
 
 )
 layout =dict(
@@ -1022,8 +923,6 @@ layout =dict(
     ),
     showlegend=True,
     hovermode="closest",
-    #sliders=[sliders],
-   #updatemenus=[updatemenus],
     #plot_bgcolor="#191A1A",
     #paper_bgcolor="#020202",
     mapbox=dict(
@@ -1042,7 +941,6 @@ layout =dict(
     ),
 
 )
-#have to add back in buildings
 data = [trace1,trace2, trace3, trace4,trace5, trace6, trace7, trace8]
 labels=["Buildings", "8/20/2020","8/24/2020","9/03/2020","9/11/2020","9/16/2020","9/22/2020","9/28/2020"]
 figure = go.Figure(data=data, layout=layout)
@@ -1058,7 +956,7 @@ for i in range(num_steps):
     step['args'][1][0] = True
     steps.append(step)
 
-sliders1 = [dict(
+sliders = [dict(
     steps =steps,
     currentvalue=dict(
         font=dict(size=16),
@@ -1102,12 +1000,17 @@ for i in range(num_steps):
 
     steps.append(step)
 
-slidersfig=[dict(steps=steps,)]
+slidersfig=[dict(steps=steps,
+    currentvalue=dict(
+    font=dict(size=15),
+    prefix="Date : ",
+    xanchor="right",
+    visible=True,
+
+    ),y=-.15,)]
 
 fig.layout.sliders=slidersfig
-
-
-figure.layout.sliders = sliders1
+figure.layout.sliders = sliders
 #py.create_animations(figure)
 
 server = Flask(__name__)

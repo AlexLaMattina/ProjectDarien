@@ -907,8 +907,6 @@ fig.update_layout(
     showlegend=False,
     hovermode="x unified",
 
-
-
 )
 layout =dict(
     title="COVID-19 Modeling Data",

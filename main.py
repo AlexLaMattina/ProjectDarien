@@ -697,57 +697,147 @@ slidersfig=[dict(steps=steps,)]
 ###########################################################################
 
 #SPLIT UP DATA BY DATE
-date1lon = []
-date1lat = []
+date1masklon = []
+date1masklat = []
 date1id=[]
-date2lon = []
-date2lat = []
+date1nomasklon=[]
+date1nomasklat=[]
+date1unknownlon=[]
+date1unknownlat=[]
+
+
+date2masklon = []
+date2masklat = []
 date2id=[]
-date3lon = []
-date3lat = []
+date2nomasklon=[]
+date2nomasklat=[]
+date2unknownlon=[]
+date2unknownlat=[]
+
+date3masklon = []
+date3masklat = []
 date3id=[]
-date4lon = []
-date4lat = []
+date3nomasklon=[]
+date3nomasklat=[]
+date3unknownlon=[]
+date3unknownlat=[]
+
+date4masklon = []
+date4masklat = []
 date4id=[]
-date5lon = []
-date5lat = []
+date4nomasklon=[]
+date4nomasklat=[]
+date4unknownlon=[]
+date4unknownlat=[]
+
+date5masklon = []
+date5masklat = []
 date5id=[]
-date6lon = []
-date6lat = []
+date5nomasklon=[]
+date5nomasklat=[]
+date5unknownlon=[]
+date5unknownlat=[]
+
+date6masklon = []
+date6masklat = []
 date6id=[]
-date7lon = []
-date7lat = []
+date6nomasklon=[]
+date6nomasklat=[]
+date6unknownlon=[]
+date6unknownlat=[]
+
+date7masklon = []
+date7masklat = []
 date7id=[]
+date7nomasklon=[]
+date7nomasklat=[]
+date7unknownlon=[]
+date7unknownlat=[]
 
 for i in pf.index:
     if pf['date'][i] == '8/24/2020':
-        date1lon.append(pf['LON'][i])
-        date1lat.append(pf['LAT'][i])
         date1id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date1masklon.append(pf['LON'][i])
+            date1masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date1nomasklon.append(pf['LON'][i])
+            date1nomasklat.append(pf['LAT'][i])
+        else:
+            date1unknownlon.append(pf['LON'][i])
+            date1unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '8/24/2020':
-        date2lon.append(pf['LON'][i])
-        date2lat.append(pf['LAT'][i])
         date2id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date2masklon.append(pf['LON'][i])
+            date2masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date2nomasklon.append(pf['LON'][i])
+            date2nomasklat.append(pf['LAT'][i])
+        else:
+            date2unknownlon.append(pf['LON'][i])
+            date2unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '9/03/2020':
-        date3lon.append(pf['LON'][i])
-        date3lat.append(pf['LAT'][i])
         date3id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date3masklon.append(pf['LON'][i])
+            date3masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date3nomasklon.append(pf['LON'][i])
+            date3nomasklat.append(pf['LAT'][i])
+        else:
+            date3unknownlon.append(pf['LON'][i])
+            date3unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '9/11/2020':
-        date4lon.append(pf['LON'][i])
-        date4lat.append(pf['LAT'][i])
         date4id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date4masklon.append(pf['LON'][i])
+            date4masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date4nomasklon.append(pf['LON'][i])
+            date4nomasklat.append(pf['LAT'][i])
+        else:
+            date4unknownlon.append(pf['LON'][i])
+            date4unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '9/16/2020':
-        date5lon.append(pf['LON'][i])
-        date5lat.append(pf['LAT'][i])
-        date5id.append(pf['id'][i])
+        date3id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date5masklon.append(pf['LON'][i])
+            date5masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date5nomasklon.append(pf['LON'][i])
+            date5nomasklat.append(pf['LAT'][i])
+        else:
+            date5unknownlon.append(pf['LON'][i])
+            date5unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '9/22/2020':
-        date6lon.append(pf['LON'][i])
-        date6lat.append(pf['LAT'][i])
         date6id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date6masklon.append(pf['LON'][i])
+            date6masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date6nomasklon.append(pf['LON'][i])
+            date6nomasklat.append(pf['LAT'][i])
+        else:
+            date6unknownlon.append(pf['LON'][i])
+            date6unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '9/28/2020':
-        date7lon.append(pf['LON'][i])
-        date7lat.append(pf['LAT'][i])
-        date7id.append(pf['id'][i])
+        date3id.append(pf['id'][i])
+        if pf["withmask 0=no, 1=yes"][i] == 1:
+            date7masklon.append(pf['LON'][i])
+            date7masklat.append(pf['LAT'][i])
+        elif pf["withmask 0=no, 1=yes"][i] == 0:
+            date7nomasklon.append(pf['LON'][i])
+            date7nomasklat.append(pf['LAT'][i])
+        else:
+            date7unknownlon.append(pf['LON'][i])
+            date7unknownlat.append(pf['LAT'][i])
 
 trace1=Scattermapbox(
     name ="Buildings",
@@ -768,10 +858,28 @@ trace1=Scattermapbox(
 )
 date1df = DataFrame(date1id,columns=['ID'])
 trace2 = Scattermapbox(
-    name="8/20/2020 Data",
+    name="8/20/2020 Mask Data",
     mode="markers",
-    lon=date1lat,
-    lat=date1lon,
+    lon=date1masklat,
+    lat=date1masklon,
+    text="ID: " + date1df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace3 = Scattermapbox(
+    name="8/20/2020 No Mask Data",
+    mode="markers",
+    lon=date1nomasklat,
+    lat=date1nomasklon,
     text="ID: " + date1df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
@@ -784,12 +892,47 @@ trace2 = Scattermapbox(
     ),
 
 )
-date2df = DataFrame(date2id,columns=['ID'])
-trace3 = Scattermapbox(
-    name="8/24/2020 Data",
+trace4 = Scattermapbox(
+    name="8/20/2020 Unknown Data",
     mode="markers",
-    lon=date2lat,
-    lat=date2lon,
+    lon=date1unknownlat,
+    lat=date1unknownlon,
+    text="ID: " + date1df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+
+)
+date2df = DataFrame(date2id,columns=['ID'])
+trace5 = Scattermapbox(
+    name="8/24/2020 Mask Data",
+    mode="markers",
+    lon=date2masklat,
+    lat=date2masklon,
+    text="ID: " + date2df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace6 = Scattermapbox(
+    name="8/24/2020 No Mask Data",
+    mode="markers",
+    lon=date2nomasklat,
+    lat=date2nomasklon,
     text="ID: " + date2df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
@@ -802,12 +945,47 @@ trace3 = Scattermapbox(
     ),
 
 )
-date3df = DataFrame(date3id,columns=['ID'])
-trace4 = Scattermapbox(
-    name="9/03/2020 Data",
+trace7 = Scattermapbox(
+    name="8/24/2020 Unknown Data",
     mode="markers",
-    lon=date3lat,
-    lat=date3lon,
+    lon=date2unknownlat,
+    lat=date2unknownlon,
+    text="ID: " + date2df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+
+)
+date3df = DataFrame(date3id,columns=['ID'])
+trace8 = Scattermapbox(
+    name="9/03/2020 Mask Data",
+    mode="markers",
+    lon=date3masklat,
+    lat=date3masklon,
+    text="ID: " + date3df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace9 = Scattermapbox(
+    name="9/03/2020 No Mask Data",
+    mode="markers",
+    lon=date3nomasklat,
+    lat=date3nomasklon,
     text="ID: " + date3df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
@@ -820,13 +998,48 @@ trace4 = Scattermapbox(
     ),
 
 )
-date4df = DataFrame(date4id,columns=['ID'])
-trace5 = Scattermapbox(
-    name="9/11/2020 Data",
+trace10 = Scattermapbox(
+    name="9/03/2020 Unknown Data",
     mode="markers",
-    lon=date4lat,
-    lat=date4lon,
-    text="ID: "+ date4df['ID'].astype(str),
+    lon=date3unknownlat,
+    lat=date3unknownlon,
+    text="ID: " + date3df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+
+)
+date4df = DataFrame(date4id,columns=['ID'])
+trace11 = Scattermapbox(
+    name="9/11/2020 Mask Data",
+    mode="markers",
+    lon=date3masklat,
+    lat=date3masklon,
+    text="ID: " + date3df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace12 = Scattermapbox(
+    name="9/11/2020 No Mask Data",
+    mode="markers",
+    lon=date4nomasklat,
+    lat=date4nomasklon,
+    text="ID: " + date4df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -834,17 +1047,52 @@ trace5 = Scattermapbox(
         # BASIC
         size=8,
         color='red',
+        opacity=0.6
+    ),
+
+)
+trace13 = Scattermapbox(
+    name="9/11/2020 UnKnown Data",
+    mode="markers",
+    lon=date4unknownlat,
+    lat=date4unknownlon,
+    text="ID: " + date4df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
         opacity=0.6
     ),
 
 )
 date5df = DataFrame(date5id,columns=['ID'])
-trace6 = Scattermapbox(
-    name="9/16/2020 Data",
+trace14 = Scattermapbox(
+    name="9/16/2020 Mask Data",
     mode="markers",
-    lon=date5lat,
-    lat=date5lon,
-    text="ID: "+ date5df['ID'].astype(str),
+    lon=date5masklat,
+    lat=date5masklon,
+    text="ID: " + date5df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace15 = Scattermapbox(
+    name="9/16/2020 No Mask Data",
+    mode="markers",
+    lon=date5nomasklat,
+    lat=date5nomasklon,
+    text="ID: " + date5df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -856,12 +1104,47 @@ trace6 = Scattermapbox(
     ),
 
 )
-date6df = DataFrame(date6id,columns=['ID'])
-trace7 = Scattermapbox(
-    name="9/22/2020 Data",
+trace16 = Scattermapbox(
+    name="9/16/2020 UnKnown Data",
     mode="markers",
-    lon=date6lat,
-    lat=date6lon,
+    lon=date5unknownlat,
+    lat=date5unknownlon,
+    text="ID: " + date5df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+
+)
+date6df = DataFrame(date6id,columns=['ID'])
+trace17 = Scattermapbox(
+    name="9/22/2020 Mask Data",
+    mode="markers",
+    lon=date6masklat,
+    lat=date6masklon,
+    text="ID: " + date6df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace18 = Scattermapbox(
+    name="9/22/2020 No Mask Data",
+    mode="markers",
+    lon=date6nomasklat,
+    lat=date6nomasklon,
     text="ID: " + date6df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
@@ -874,12 +1157,50 @@ trace7 = Scattermapbox(
     ),
 
 )
-date7df = DataFrame(date7id,columns=['ID'])
-trace8 = Scattermapbox(
-    name="9/28/2020 Data",
+trace19 = Scattermapbox(
+    name="9/22/2020 UnKnown Data",
     mode="markers",
-    lon=date7lat,
-    lat=date7lon,
+    lon=date6unknownlat,
+    lat=date6unknownlon,
+    text="ID: " + date6df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+
+)
+
+
+date7df = DataFrame(date7id,columns=['ID'])
+
+trace20 = Scattermapbox(
+    name="9/28/2020 Mask Data",
+    mode="markers",
+    lon=date7masklat,
+    lat=date7masklon,
+    text="ID: " + date7df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+
+)
+
+trace21 = Scattermapbox(
+    name="9/28/2020 No Mask Data",
+    mode="markers",
+    lon=date7nomasklat,
+    lat=date7nomasklon,
     text="ID: " + date7df['ID'].astype(str),
     hoverinfo="lon+lat+text",
     # SPECS
@@ -888,6 +1209,23 @@ trace8 = Scattermapbox(
         # BASIC
         size=8,
         color='red',
+        opacity=0.6
+    ),
+
+)
+trace22 = Scattermapbox(
+    name="9/28/2020 UnKnown Data",
+    mode="markers",
+    lon=date7unknownlat,
+    lat=date7unknownlon,
+    text="ID: " + date7df['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
         opacity=0.6
     ),
 
@@ -939,18 +1277,30 @@ layout =dict(
     ),
 
 )
-data = [trace1,trace2, trace3, trace4,trace5, trace6, trace7, trace8]
-labels=["Buildings", "8/20/2020","8/24/2020","9/03/2020","9/11/2020","9/16/2020","9/22/2020","9/28/2020"]
+data = [trace1,trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10, trace11, trace12, trace13,
+        trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21, trace22]
+labels=["Buildings", "8/20/2020","","","8/24/2020","","","9/03/2020","","","9/11/2020","","","9/16/2020","","","9/22/2020","","","9/28/2020""","",]
 figure = go.Figure(data=data, layout=layout)
 steps=[]
-num_steps=8
-for i in range(num_steps):
+num_steps=22
+count=8
+
+for i in range(1,num_steps,3):
+    print(i)
     step = dict(
         label=labels[i],
         method='restyle',
         args=['visible', ['legendonly'] * len(figure.data)],
     )
-    step['args'][1][i] = True
+    if i < num_steps:
+        step['args'][1][i] = True
+
+    if i+1 < num_steps:
+        step['args'][1][i+1] = True
+
+    if i+2 < num_steps or i+2 == num_steps:
+        step['args'][1][i+2] = True
+
     step['args'][1][0] = True
     steps.append(step)
 

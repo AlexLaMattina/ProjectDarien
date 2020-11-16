@@ -754,7 +754,26 @@ date7nomasklat=[]
 date7unknownlon=[]
 date7unknownlat=[]
 
+masklon=[]
+masklat=[]
+ids=[]
+nomasklon=[]
+nomasklat=[]
+unknownlon=[]
+unknownlat=[]
+
 for i in pf.index:
+    ids.append(pf['id'][i])
+    if pf["withmask 0=no, 1=yes"][i] == 1:
+        masklon.append(pf['LON'][i])
+        masklat.append(pf['LAT'][i])
+    elif pf["withmask 0=no, 1=yes"][i] == 0:
+        nomasklon.append(pf['LON'][i])
+        nomasklat.append(pf['LAT'][i])
+    else:
+        unknownlon.append(pf['LON'][i])
+        unknownlat.append(pf['LAT'][i])
+
     if pf['date'][i] == '8/24/2020':
         date1id.append(pf['id'][i])
         if pf["withmask 0=no, 1=yes"][i] == 1:
@@ -853,12 +872,12 @@ trace1=Scattermapbox(
         size=12,
         color='black',
         opacity=0.8
-
     ),
+    legendgroup="Buildings",
 )
 date1df = DataFrame(date1id,columns=['ID'])
 trace2 = Scattermapbox(
-    name="8/20/2020 Mask Data",
+    name="Mask Data",
     mode="markers",
     lon=date1masklat,
     lat=date1masklon,
@@ -872,11 +891,13 @@ trace2 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
 trace3 = Scattermapbox(
-    name="8/20/2020 No Mask Data",
+    name="No Mask Data",
     mode="markers",
     lon=date1nomasklat,
     lat=date1nomasklon,
@@ -890,10 +911,12 @@ trace3 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace4 = Scattermapbox(
-    name="8/20/2020 Unknown Data",
+    name="Unknown Mask Data",
     mode="markers",
     lon=date1unknownlat,
     lat=date1unknownlon,
@@ -907,6 +930,8 @@ trace4 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 date2df = DataFrame(date2id,columns=['ID'])
@@ -925,6 +950,8 @@ trace5 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
@@ -943,6 +970,8 @@ trace6 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace7 = Scattermapbox(
@@ -960,6 +989,8 @@ trace7 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 date3df = DataFrame(date3id,columns=['ID'])
@@ -978,11 +1009,13 @@ trace8 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
 trace9 = Scattermapbox(
-    name="9/03/2020 No Mask Data",
+    name="No Mask Data",
     mode="markers",
     lon=date3nomasklat,
     lat=date3nomasklon,
@@ -996,6 +1029,8 @@ trace9 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace10 = Scattermapbox(
@@ -1013,6 +1048,8 @@ trace10 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 date4df = DataFrame(date4id,columns=['ID'])
@@ -1031,6 +1068,8 @@ trace11 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
@@ -1049,6 +1088,8 @@ trace12 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace13 = Scattermapbox(
@@ -1066,6 +1107,8 @@ trace13 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 date5df = DataFrame(date5id,columns=['ID'])
@@ -1084,6 +1127,8 @@ trace14 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
@@ -1102,6 +1147,8 @@ trace15 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace16 = Scattermapbox(
@@ -1119,6 +1166,8 @@ trace16 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 date6df = DataFrame(date6id,columns=['ID'])
@@ -1137,6 +1186,8 @@ trace17 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask Data",
+    showlegend=False,
 
 )
 
@@ -1155,6 +1206,8 @@ trace18 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask Data",
+    showlegend=False,
 
 )
 trace19 = Scattermapbox(
@@ -1172,6 +1225,8 @@ trace19 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
 
 )
 
@@ -1193,6 +1248,8 @@ trace20 = Scattermapbox(
         color='green',
         opacity=0.6
     ),
+    legendgroup="Mask data",
+    showlegend=False,
 
 )
 
@@ -1211,6 +1268,8 @@ trace21 = Scattermapbox(
         color='red',
         opacity=0.6
     ),
+    legendgroup="No Mask data",
+    showlegend=False,
 
 )
 trace22 = Scattermapbox(
@@ -1228,6 +1287,64 @@ trace22 = Scattermapbox(
         color='blue',
         opacity=0.6
     ),
+    legendgroup="Unknown data",
+    showlegend=False,
+
+)
+iddf = DataFrame(ids,columns=['ID'])
+trace23 = Scattermapbox(
+    name="Mask Data",
+    mode="markers",
+    lon=masklat,
+    lat=masklon,
+    text="ID: " + iddf['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='green',
+        opacity=0.6
+    ),
+    legendgroup="Mask data",
+
+)
+
+trace24 = Scattermapbox(
+    name="No Mask Data",
+    mode="markers",
+    lon=nomasklat,
+    lat=nomasklon,
+    text="ID: " + iddf['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='red',
+        opacity=0.6
+    ),
+    legendgroup="No Mask data",
+
+)
+trace25 = Scattermapbox(
+    name="UnKnown Mask Data",
+    mode="markers",
+    lon=unknownlat,
+    lat=unknownlon,
+    text="ID: " + iddf['ID'].astype(str),
+    hoverinfo="lon+lat+text",
+    # SPECS
+    marker=dict(
+
+        # BASIC
+        size=8,
+        color='blue',
+        opacity=0.6
+    ),
+    legendgroup="Unknown data",
 
 )
 
@@ -1257,7 +1374,7 @@ layout =dict(
         r = 80,
         pad = 2,
     ),
-    showlegend=True,
+    #showlegend=False,
     hovermode="closest",
     #plot_bgcolor="#191A1A",
     #paper_bgcolor="#020202",
@@ -1277,16 +1394,15 @@ layout =dict(
     ),
 
 )
-data = [trace1,trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10, trace11, trace12, trace13,
+data = [trace1,trace23,trace24,trace25,trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10, trace11, trace12, trace13,
         trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21, trace22]
-labels=["Buildings", "8/20/2020","","","8/24/2020","","","9/03/2020","","","9/11/2020","","","9/16/2020","","","9/22/2020","","","9/28/2020""","",]
+labels=["Buildings","All Data","","", "8/20/2020","","","8/24/2020","","","9/03/2020","","","9/11/2020","","","9/16/2020","","","9/22/2020","","","9/28/2020""","",]
 figure = go.Figure(data=data, layout=layout)
 steps=[]
-num_steps=22
+num_steps=25
 count=8
 
 for i in range(1,num_steps,3):
-    print(i)
     step = dict(
         label=labels[i],
         method='restyle',

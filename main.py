@@ -20,7 +20,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = flask.Flask(__name__)
 
 url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/BuildingData.csv'
-url2 = 'https://raw.githubusercontent.com/AlexLaMattina/COVID-19-Modeling/main/Data.csv'
+url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
 url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
@@ -982,8 +982,13 @@ layout = dict(
 data = [trace1, trace23, trace24, trace25, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10,
         trace11, trace12, trace13,
         trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21]
-labels = ["Buildings", "All Data", "", "", "8/20/2020", "", "", "8/24/2020", "", "", "9/03/2020", "", "", "9/11/2020",
-          "", "", "9/16/2020", "", "", "9/22/2020", "", "", "9/28/2020""", "", ]
+labels = ["Buildings", "All Data", "", "", "8/20/2020 Time Stamp 11:32:54 AM - 12:50:24 PM ", "", "",
+          "8/24/2020  Time Stamp  11:58:01 AM - 12:41:00 PM", "", "",
+          "9/03/2020  Time Stamp  11:19:36 AM - 12:35:48 PM", "", "",
+          "9/11/2020   Time Stamp 11:09:11 AM - 12:18:43 PM",
+          "", "", "9/16/2020 Time Stamp 10:32:17 AM - 12:44:41 PM", "", "",
+          "9/22/2020 Time Stamp 10:47:42 AM - 12:48:08 PM", "", "",
+          "9/28/2020 Time Stamp 11:54:20 AM - 12:53:33 PM", "", "", ]
 figure = go.Figure(data=data, layout=layout)
 steps = []
 num_steps = 24
@@ -1009,7 +1014,7 @@ for i in range(1, num_steps, 3):
 sliders = [dict(
     steps=steps,
     currentvalue=dict(
-        font=dict(size=16),
+        font=dict(size=15),
         prefix="Date : ",
         xanchor="right",
         visible=True,

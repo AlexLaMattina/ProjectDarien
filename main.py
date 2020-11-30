@@ -677,7 +677,7 @@ slidersfig = [dict(steps=steps, )]
 
 ###########################################################################
 
-# SPLIT UP DATA BY DATE
+# SPLIT UP DATA BY DATE, MASKS, and SOCIAL DIST
 date1masklon = []
 date1masklat = []
 date1id = []
@@ -685,6 +685,11 @@ date1nomasklon = []
 date1nomasklat = []
 date1unknownlon = []
 date1unknownlat = []
+date1masksdlon = []
+date1masksdlat = []
+date1nomasksdlon = []
+date1nomasksdlat = []
+
 
 date2masklon = []
 date2masklat = []
@@ -978,13 +983,13 @@ fig.update_layout(
 data = [trace1, trace23, trace24, trace25, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10,
         trace11, trace12, trace13,
         trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21]
-labels = ["Buildings", "All Data", "", "", "8/20/2020 Time Stamp 11:32:54 AM - 12:50:24 PM ", "", "",
-          "8/24/2020  Time Stamp  11:58:01 AM - 12:41:00 PM", "", "",
-          "9/03/2020  Time Stamp  11:19:36 AM - 12:35:48 PM", "", "",
-          "9/11/2020   Time Stamp 11:09:11 AM - 12:18:43 PM",
-          "", "", "9/16/2020 Time Stamp 10:32:17 AM - 12:44:41 PM", "", "",
-          "9/22/2020 Time Stamp 10:47:42 AM - 12:48:08 PM", "", "",
-          "9/28/2020 Time Stamp 11:54:20 AM - 12:53:33 PM", "", "", ]
+labels = ["Buildings", "All Data", "", "", "8/20/2020<br>Time Stamp:<br>11:32:54 AM - 12:50:24 PM ", "", "",
+          "8/24/2020<br>Time Stamp:<br>11:58:01 AM - 12:41:00 PM","", "",
+          "9/03/2020<br>Time Stamp:<br>11:19:36 AM - 12:35:48 PM", "", "",
+          "9/11/2020<br>Time Stamp:<br>11:09:11 AM - 12:18:43 PM",
+          "", "", "9/16/2020<br>Time Stamp:<br>10:32:17 AM - 12:44:41 PM", "", "",
+          "9/22/2020<br>Time Stamp:<br>10:47:42 AM - 12:48:08 PM<a href = 'https://www.nytimes.com/'>", "", "",
+          "9/28/2020<br>Time Stamp:<br>11:54:20 AM - 12:53:33 PM", "", "", ]
 figure = go.Figure(data=data, layout=layout)
 steps = []
 num_steps = 24
@@ -993,8 +998,10 @@ for i in range(1, num_steps, 3):
     step = dict(
         label=labels[i],
         method='restyle',
+
         args=['visible', ['legendonly'] * len(figure.data)],
     )
+
     if i < num_steps:
         step['args'][1][i] = True
 
@@ -1047,7 +1054,6 @@ for i in range(num_steps):
     step['args'][1][i + 19 * num_steps] = True
     step['args'][1][i + 20 * num_steps] = True
     step['args'][1][i + 21 * num_steps] = True
-
     steps.append(step)
 
 slidersfig = [dict(steps=steps,

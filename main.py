@@ -844,6 +844,7 @@ trace1 = Scattermapbox(
     lon=df['LAT'],
     lat=df['LON'],
     text=df['Location'],
+
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
@@ -860,6 +861,7 @@ trace1 = Scattermapbox(
 
 def maketrace(name, lats, lons, dataframe, color, shape, group, showlegend):
     return Scattermapbox(
+
         name=name,
         mode="markers",
         lon=lats,
@@ -932,51 +934,45 @@ trace23 = maketrace("All Mask Data", masklat, masklon, iddf, "green", "circle", 
 trace24 = maketrace("All No Mask Data", nomasklat, nomasklon, iddf, "red", "circle", "No Mask Data", True)
 trace25 = maketrace("All Unknown Mask Data", unknownlat, unknownlon, iddf, "blue", "circle", "Unknown data", True)
 
-fig.update_layout(
-    autosize=True,
-    # plot_bgcolor="#191A1A",
-    # paper_bgcolor="#020202",
-    margin=dict(
-        t=100,
-        l=100,
-        b=100,
-        r=100,
-        pad=2,
-    ),
-    showlegend=False,
-    hovermode="x unified",
 
-)
 layout = dict(
     title="COVID-19 Modeling Data",
     autosize=True,
-
-    margin=dict(
-        t=80,
-        l=80,
-        b=80,
-        r=80,
-        pad=2,
-    ),
+    height=875,
+    width=1300,
+    margin=dict(l=80, r=80, t=80, b=80),
 
     # showlegend=True,
     hovermode="closest",
     # plot_bgcolor="#191A1A",
     # paper_bgcolor="#020202",
     mapbox=dict(
+
         accesstoken=mapbox_access_token,
         center=dict(
-            lat=39.654,
-            lon=-75.66
+            lat=39.68,
+            lon=-75.75
         ),
         pitch=0,
-        zoom=10,
+        zoom=13.5,
         # style = "dark",
-        domain=dict(
-            x=[0, 1],
-            y=[0.18, 0.77]
-        ),
+
     ),
+
+)
+fig.update_layout(
+    autosize=True,
+
+    # plot_bgcolor="#191A1A",
+    # paper_bgcolor="#020202",
+    margin=dict(
+        t=50,
+        l=100,
+        b=50,
+        r=100,
+    ),
+    showlegend=False,
+    hovermode="x unified",
 
 )
 data = [trace1, trace23, trace24, trace25, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10,
@@ -1079,7 +1075,7 @@ app.layout = html.Div(children=[
         dcc.Graph(
             figure=figure,
             style={
-                'height': 700,
+                'height': 950,
             },
         ),
 

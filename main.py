@@ -22,6 +22,8 @@ server = flask.Flask(__name__)
 url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/BuildingData.csv'
 url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
 url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
+url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
+
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
                               "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int",
@@ -41,7 +43,9 @@ pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int",
                               "Etiquette1 0=no hands to head, 1= hands to head": "int"})
 af = pd.read_csv(url3, dtype={"date": "string",
                               "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int"})
-
+sf = pd.read_csv(url4, dtype={"id": "int",
+                              "Masksd 0=Mask Non-Complient and Not Social Distancing; "
+                              "1 = Mask Complient and Social Distancing; 9= could not be determined": "int"})
 dates = pf["date"].unique()
 dates = list(sorted(dates.astype(str)))
 
@@ -685,11 +689,6 @@ date1nomasklon = []
 date1nomasklat = []
 date1unknownlon = []
 date1unknownlat = []
-date1masksdlon = []
-date1masksdlat = []
-date1nomasksdlon = []
-date1nomasksdlat = []
-
 
 date2masklon = []
 date2masklat = []
@@ -749,99 +748,149 @@ unknownlat = []
 
 for i in pf.index:
     ids.append(pf['id'][i])
-    if pf["withmask 0=no, 1=yes"][i] == 1:
-        masklon.append(pf['LON'][i])
-        masklat.append(pf['LAT'][i])
-    elif pf["withmask 0=no, 1=yes"][i] == 0:
-        nomasklon.append(pf['LON'][i])
-        nomasklat.append(pf['LAT'][i])
-    else:
-        unknownlon.append(pf['LON'][i])
-        unknownlat.append(pf['LAT'][i])
+    for j in sf.index:
+        if i == j:
+            if sf[
+                "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= "
+                "could not be determined"][
+                i] == 1:
+                masklon.append(pf['LON'][i])
+                masklat.append(pf['LAT'][i])
+            elif sf[
+                "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= "
+                "could not be determined"][
+                i] == 0:
+                nomasklon.append(pf['LON'][i])
+                nomasklat.append(pf['LAT'][i])
+            else:
+                unknownlon.append(pf['LON'][i])
+                unknownlat.append(pf['LAT'][i])
 
-    if pf['date'][i] == '8/24/2020':
+    if pf['date'][i] == '8/20/2020':
         date1id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date1masklon.append(pf['LON'][i])
-            date1masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date1nomasklon.append(pf['LON'][i])
-            date1nomasklat.append(pf['LAT'][i])
-        else:
-            date1unknownlon.append(pf['LON'][i])
-            date1unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date1masklon.append(pf['LON'][i])
+                    date1masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date1nomasklon.append(pf['LON'][i])
+                    date1nomasklat.append(pf['LAT'][i])
+                else:
+                    date1unknownlon.append(pf['LON'][i])
+                    date1unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '8/24/2020':
         date2id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date2masklon.append(pf['LON'][i])
-            date2masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date2nomasklon.append(pf['LON'][i])
-            date2nomasklat.append(pf['LAT'][i])
-        else:
-            date2unknownlon.append(pf['LON'][i])
-            date2unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date2masklon.append(pf['LON'][i])
+                    date2masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date2nomasklon.append(pf['LON'][i])
+                    date2nomasklat.append(pf['LAT'][i])
+                else:
+                    date2unknownlon.append(pf['LON'][i])
+                    date2unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/03/2020':
         date3id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date3masklon.append(pf['LON'][i])
-            date3masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date3nomasklon.append(pf['LON'][i])
-            date3nomasklat.append(pf['LAT'][i])
-        else:
-            date3unknownlon.append(pf['LON'][i])
-            date3unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date3masklon.append(pf['LON'][i])
+                    date3masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date3nomasklon.append(pf['LON'][i])
+                    date3nomasklat.append(pf['LAT'][i])
+                else:
+                    date3unknownlon.append(pf['LON'][i])
+                    date3unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/11/2020':
         date4id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date4masklon.append(pf['LON'][i])
-            date4masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date4nomasklon.append(pf['LON'][i])
-            date4nomasklat.append(pf['LAT'][i])
-        else:
-            date4unknownlon.append(pf['LON'][i])
-            date4unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date4masklon.append(pf['LON'][i])
+                    date4masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date4nomasklon.append(pf['LON'][i])
+                    date4nomasklat.append(pf['LAT'][i])
+                else:
+                    date4unknownlon.append(pf['LON'][i])
+                    date4unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/16/2020':
         date5id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date5masklon.append(pf['LON'][i])
-            date5masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date5nomasklon.append(pf['LON'][i])
-            date5nomasklat.append(pf['LAT'][i])
-        else:
-            date5unknownlon.append(pf['LON'][i])
-            date5unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date5masklon.append(pf['LON'][i])
+                    date5masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date5nomasklon.append(pf['LON'][i])
+                    date5nomasklat.append(pf['LAT'][i])
+                else:
+                    date5unknownlon.append(pf['LON'][i])
+                    date5unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/22/2020':
         date6id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date6masklon.append(pf['LON'][i])
-            date6masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date6nomasklon.append(pf['LON'][i])
-            date6nomasklat.append(pf['LAT'][i])
-        else:
-            date6unknownlon.append(pf['LON'][i])
-            date6unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date6masklon.append(pf['LON'][i])
+                    date6masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date6nomasklon.append(pf['LON'][i])
+                    date6nomasklat.append(pf['LAT'][i])
+                else:
+                    date6unknownlon.append(pf['LON'][i])
+                    date6unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/28/2020':
         date7id.append(pf['id'][i])
-        if pf["withmask 0=no, 1=yes"][i] == 1:
-            date7masklon.append(pf['LON'][i])
-            date7masklat.append(pf['LAT'][i])
-        elif pf["withmask 0=no, 1=yes"][i] == 0:
-            date7nomasklon.append(pf['LON'][i])
-            date7nomasklat.append(pf['LAT'][i])
-        else:
-            date7unknownlon.append(pf['LON'][i])
-            date7unknownlat.append(pf['LAT'][i])
+        for j in sf.index:
+            if i == j:
+                if sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 1:
+                    date7masklon.append(pf['LON'][i])
+                    date7masklat.append(pf['LAT'][i])
+                elif sf[
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    i] == 0:
+                    date7nomasklon.append(pf['LON'][i])
+                    date7nomasklat.append(pf['LAT'][i])
+                else:
+                    date7unknownlon.append(pf['LON'][i])
+                    date7unknownlat.append(pf['LAT'][i])
 
 trace1 = Scattermapbox(
     name="Buildings",
@@ -864,87 +913,88 @@ trace1 = Scattermapbox(
 )
 
 
-def maketrace(name, lats, lons, dataframe, color, shape, group, showlegend):
+def maketrace(name, lats, lons, dataframe, color, shape, group, showlegend, sd):
     return Scattermapbox(
 
         name=name,
         mode="markers",
+
         lon=lats,
         lat=lons,
-        text="ID: " + dataframe['ID'].astype(str),
+        text="ID: " + dataframe['ID'].astype(str) + "<br>Mask/Social Distance Compliance: " + sd,
         hoverinfo="lon+lat+text",
         # SPECS
         marker=dict(
-
-            # BASIC
             size=8,
             color=color,
             symbol=shape,
-            opacity=0.6,
+            opacity=0.8,
         ),
         legendgroup=group,
         showlegend=showlegend,
+
     )
 
 
+
 date1df = DataFrame(date1id, columns=['ID'])
-trace2 = maketrace("8/20/2020 Mask Data", date1masklat, date1masklon, date1df, "green", "circle", "Mask Data", True)
-trace3 = maketrace("8/20/2020 No Mask Data", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data",
-                   True)
-trace4 = maketrace("8/20/2020 Unknown Mask Data", date1unknownlat, date1unknownlon, date1df, "blue", "circle",
-                   "Unknown data", True)
+trace2 = maketrace("8/20/2020 ", date1masklat, date1masklon, date1df, "green", "circle", "Mask Data", True, "YES")
+trace3 = maketrace("8/20/2020 ", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data",
+                   True, "NO")
+trace4 = maketrace("8/20/2020 ", date1unknownlat, date1unknownlon, date1df, "blue", "circle",
+                   "Unknown data", True, "UNKNOWN")
 
 date2df = DataFrame(date2id, columns=['ID'])
-trace5 = maketrace("8/24/2020 Mask Data", date2masklat, date2masklon, date2df, "green", "circle", "Mask Data", True)
-trace6 = maketrace("8/24/2020 No Mask Data", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data",
-                   True)
-trace7 = maketrace("8/24/2020 Unknown Mask Data", date2unknownlat, date2unknownlon, date2df, "blue", "circle",
-                   "Unknown data", True)
+trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "green", "circle", "Mask Data", True, "YES")
+trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data",
+                   True, "NO")
+trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "blue", "circle",
+                   "Unknown data", True, "UNKNOWN")
 
 date3df = DataFrame(date3id, columns=['ID'])
-trace8 = maketrace("9/03/2020 Mask Data", date3masklat, date3masklon, date3df, "green", "circle", "Mask Data", True)
-trace9 = maketrace("9/03/2020 No Mask Data", date3nomasklat, date3nomasklon, date3df, "red", "circle", "No Mask Data",
-                   True)
-trace10 = maketrace("9/03/2020 Unknown Mask Data", date3unknownlat, date3unknownlon, date3df, "blue", "circle",
-                    "Unknown data", True)
+trace8 = maketrace("9/03/2020", date3masklat, date3masklon, date3df, "green", "circle", "Mask Data",True, "YES")
+trace9 = maketrace("9/03/2020", date3nomasklat, date3nomasklon, date3df, "red", "circle", "No Mask Data",
+                True, "NO")
+trace10 = maketrace("9/03/2020", date3unknownlat, date3unknownlon, date3df, "blue", "circle",
+                    "Unknown data",True, "UNKNOWN")
 
 date4df = DataFrame(date4id, columns=['ID'])
-trace11 = maketrace("9/11/2020 Mask Data", date4masklat, date4masklon, date4df, "green", "circle", "Mask Data", True)
-trace12 = maketrace("9/11/2020 No Mask Data", date4nomasklat, date4nomasklon, date4df, "red", "circle", "No Mask Data",
-                    True)
-trace13 = maketrace("9/11/2020 Unknown Mask Data", date4unknownlat, date4unknownlon, date4df, "blue", "circle",
-                    "Unknown data", True)
+trace11 = maketrace("9/11/2020", date4masklat, date4masklon, date4df, "green", "circle", "Mask Data",True, "YES")
+trace12 = maketrace("9/11/2020", date4nomasklat, date4nomasklon, date4df, "red", "circle", "No Mask Data",
+                True, "NO")
+trace13 = maketrace("9/11/2020", date4unknownlat, date4unknownlon, date4df, "blue", "circle",
+                    "Unknown data",True, "UNKNOWN")
 
 date5df = DataFrame(date5id, columns=['ID'])
-trace14 = maketrace("9/16/2020 Mask Data", date5masklat, date5masklon, date5df, "green", "circle", "Mask Data", True)
-trace15 = maketrace("9/16/2020 No Mask Data", date5nomasklat, date5nomasklon, date5df, "red", "circle", "No Mask Data",
-                    True)
-trace16 = maketrace("9/16/2020 Unknown Mask Data", date5unknownlat, date5unknownlon, date5df, "blue", "circle",
-                    "Unknown data", True)
+trace14 = maketrace("9/16/2020", date5masklat, date5masklon, date5df, "green", "circle", "Mask Data",True, "YES")
+trace15 = maketrace("9/16/2020", date5nomasklat, date5nomasklon, date5df, "red", "circle", "No Mask Data",
+                True, "NO")
+trace16 = maketrace("9/16/2020", date5unknownlat, date5unknownlon, date5df, "blue", "circle",
+                    "Unknown data",True, "UNKNOWN")
 
 date6df = DataFrame(date6id, columns=['ID'])
-trace17 = maketrace("9/22/2020 Mask Data", date6masklat, date6masklon, date6df, "green", "circle", "Mask Data", True)
-trace18 = maketrace("9/22/2020 No Mask Data", date6nomasklat, date6nomasklon, date6df, "red", "circle", "No Mask Data",
-                    True)
-trace19 = maketrace("9/22/2020 Unknown Mask Data", date6unknownlat, date6unknownlon, date6df, "blue", "circle",
-                    "Unknown data", True)
+trace17 = maketrace("9/22/2020", date6masklat, date6masklon, date6df, "green", "circle", "Mask Data",True, "YES")
+trace18 = maketrace("9/22/2020", date6nomasklat, date6nomasklon, date6df, "red", "circle", "No Mask Data",
+                True, "NO")
+trace19 = maketrace("9/22/2020", date6unknownlat, date6unknownlon, date6df, "blue", "circle",
+                    "Unknown data",True, "UNKNOWN")
 
 date7df = DataFrame(date7id, columns=['ID'])
-trace20 = maketrace("9/28/2020 Mask Data", date7masklat, date7masklon, date7df, "green", "circle", "Mask Data", True)
-trace21 = maketrace("9/28/2020 No Mask Data", date7nomasklat, date7nomasklon, date7df, "red", "circle", "No Mask Data",
-                    True)
+trace20 = maketrace("9/28/2020", date7masklat, date7masklon, date7df, "green", "circle", "Mask Data",True, "YES")
+trace21 = maketrace("9/28/2020", date7nomasklat, date7nomasklon, date7df, "red", "circle", "No Mask Data",
+                True, "NO")
 
 iddf = DataFrame(ids, columns=['ID'])
-trace23 = maketrace("All Mask Data", masklat, masklon, iddf, "green", "circle", "Mask Data", True)
-trace24 = maketrace("All No Mask Data", nomasklat, nomasklon, iddf, "red", "circle", "No Mask Data", True)
-trace25 = maketrace("All Unknown Mask Data", unknownlat, unknownlon, iddf, "blue", "circle", "Unknown data", True)
+trace23 = maketrace("Mask Compliant and Social Distancing", masklat, masklon, iddf, "green", "circle", "Mask Data",True, "YES")
+trace24 = maketrace("Mask Non-compliant and not Social Distancing", nomasklat, nomasklon, iddf, "red", "circle", "No Mask Data",True, "NO")
+trace25 = maketrace("Mask Compliance and Social Distancing Unknown", unknownlat, unknownlon, iddf, "blue", "circle", "Unknown data",True, "UNKNOWN")
 
 
 layout = dict(
-    title="COVID-19 Modeling Data",
+    title="COVID-19 Modeling Data<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date",
     autosize=True,
     height=875,
-    width=1300,
+    width=1400,
     margin=dict(l=80, r=80, t=80, b=80),
 
     # showlegend=True,
@@ -960,7 +1010,6 @@ layout = dict(
         ),
         pitch=0,
         zoom=13.5,
-        # style = "dark",
 
     ),
 
@@ -984,11 +1033,11 @@ data = [trace1, trace23, trace24, trace25, trace2, trace3, trace4, trace5, trace
         trace11, trace12, trace13,
         trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21]
 labels = ["Buildings", "All Data", "", "", "8/20/2020<br>Time Stamp:<br>11:32:54 AM - 12:50:24 PM ", "", "",
-          "8/24/2020<br>Time Stamp:<br>11:58:01 AM - 12:41:00 PM","", "",
+          "8/24/2020<br>Time Stamp:<br>11:58:01 AM - 12:41:00 PM", "", "",
           "9/03/2020<br>Time Stamp:<br>11:19:36 AM - 12:35:48 PM", "", "",
           "9/11/2020<br>Time Stamp:<br>11:09:11 AM - 12:18:43 PM",
           "", "", "9/16/2020<br>Time Stamp:<br>10:32:17 AM - 12:44:41 PM", "", "",
-          "9/22/2020<br>Time Stamp:<br>10:47:42 AM - 12:48:08 PM<a href = 'https://www.nytimes.com/'>", "", "",
+          "9/22/2020<br>Time Stamp:<br>10:47:42 AM - 12:48:08 PM", "", "",
           "9/28/2020<br>Time Stamp:<br>11:54:20 AM - 12:53:33 PM", "", "", ]
 figure = go.Figure(data=data, layout=layout)
 steps = []
@@ -1081,7 +1130,7 @@ app.layout = html.Div(children=[
         dcc.Graph(
             figure=figure,
             style={
-                'height': 950,
+                'height': 975,
             },
         ),
 

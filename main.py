@@ -925,10 +925,14 @@ def maketrace(name, lats, lons, dataframe, color, shape, group, showlegend, sd):
         hoverinfo="lon+lat+text",
         # SPECS
         marker=dict(
-            size=8,
+            size=12,
             color=color,
             symbol=shape,
             opacity=0.8,
+        ),
+        line=dict(
+            width=12,
+            color='red',
         ),
         legendgroup=group,
         showlegend=showlegend,
@@ -938,56 +942,56 @@ def maketrace(name, lats, lons, dataframe, color, shape, group, showlegend, sd):
 
 
 date1df = DataFrame(date1id, columns=['ID'])
-trace2 = maketrace("8/20/2020 ", date1masklat, date1masklon, date1df, "green", "circle", "Mask Data", True, "YES")
+trace2 = maketrace("8/20/2020 ", date1masklat, date1masklon, date1df, "blue", "circle", "Mask Data", True, "YES")
 trace3 = maketrace("8/20/2020 ", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data",
                    True, "NO")
-trace4 = maketrace("8/20/2020 ", date1unknownlat, date1unknownlon, date1df, "blue", "circle",
+trace4 = maketrace("8/20/2020 ", date1unknownlat, date1unknownlon, date1df, "purple", "circle",
                    "Unknown data", True, "UNKNOWN")
 
 date2df = DataFrame(date2id, columns=['ID'])
-trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "green", "circle", "Mask Data", True, "YES")
+trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
 trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data",
                    True, "NO")
-trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "blue", "circle",
+trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "purple", "circle",
                    "Unknown data", True, "UNKNOWN")
 
 date3df = DataFrame(date3id, columns=['ID'])
-trace8 = maketrace("9/03/2020", date3masklat, date3masklon, date3df, "green", "circle", "Mask Data",True, "YES")
+trace8 = maketrace("9/03/2020", date3masklat, date3masklon, date3df, "blue", "circle", "Mask Data",True, "YES")
 trace9 = maketrace("9/03/2020", date3nomasklat, date3nomasklon, date3df, "red", "circle", "No Mask Data",
                 True, "NO")
-trace10 = maketrace("9/03/2020", date3unknownlat, date3unknownlon, date3df, "blue", "circle",
+trace10 = maketrace("9/03/2020", date3unknownlat, date3unknownlon, date3df, "purple", "circle",
                     "Unknown data",True, "UNKNOWN")
 
 date4df = DataFrame(date4id, columns=['ID'])
-trace11 = maketrace("9/11/2020", date4masklat, date4masklon, date4df, "green", "circle", "Mask Data",True, "YES")
+trace11 = maketrace("9/11/2020", date4masklat, date4masklon, date4df, "blue", "circle", "Mask Data",True, "YES")
 trace12 = maketrace("9/11/2020", date4nomasklat, date4nomasklon, date4df, "red", "circle", "No Mask Data",
                 True, "NO")
-trace13 = maketrace("9/11/2020", date4unknownlat, date4unknownlon, date4df, "blue", "circle",
+trace13 = maketrace("9/11/2020", date4unknownlat, date4unknownlon, date4df, "purple", "circle",
                     "Unknown data",True, "UNKNOWN")
 
 date5df = DataFrame(date5id, columns=['ID'])
-trace14 = maketrace("9/16/2020", date5masklat, date5masklon, date5df, "green", "circle", "Mask Data",True, "YES")
+trace14 = maketrace("9/16/2020", date5masklat, date5masklon, date5df, "blue", "circle", "Mask Data",True, "YES")
 trace15 = maketrace("9/16/2020", date5nomasklat, date5nomasklon, date5df, "red", "circle", "No Mask Data",
                 True, "NO")
-trace16 = maketrace("9/16/2020", date5unknownlat, date5unknownlon, date5df, "blue", "circle",
+trace16 = maketrace("9/16/2020", date5unknownlat, date5unknownlon, date5df, "purple", "circle",
                     "Unknown data",True, "UNKNOWN")
 
 date6df = DataFrame(date6id, columns=['ID'])
-trace17 = maketrace("9/22/2020", date6masklat, date6masklon, date6df, "green", "circle", "Mask Data",True, "YES")
+trace17 = maketrace("9/22/2020", date6masklat, date6masklon, date6df, "blue", "circle", "Mask Data",True, "YES")
 trace18 = maketrace("9/22/2020", date6nomasklat, date6nomasklon, date6df, "red", "circle", "No Mask Data",
                 True, "NO")
-trace19 = maketrace("9/22/2020", date6unknownlat, date6unknownlon, date6df, "blue", "circle",
+trace19 = maketrace("9/22/2020", date6unknownlat, date6unknownlon, date6df, "purple", "circle",
                     "Unknown data",True, "UNKNOWN")
 
 date7df = DataFrame(date7id, columns=['ID'])
-trace20 = maketrace("9/28/2020", date7masklat, date7masklon, date7df, "green", "circle", "Mask Data",True, "YES")
+trace20 = maketrace("9/28/2020", date7masklat, date7masklon, date7df, "blue", "circle", "Mask Data",True, "YES")
 trace21 = maketrace("9/28/2020", date7nomasklat, date7nomasklon, date7df, "red", "circle", "No Mask Data",
                 True, "NO")
 
 iddf = DataFrame(ids, columns=['ID'])
-trace23 = maketrace("Mask Compliant and Social Distancing", masklat, masklon, iddf, "green", "circle", "Mask Data",True, "YES")
+trace23 = maketrace("Mask Compliant and Social Distancing", masklat, masklon, iddf, "blue", "circle", "Mask Data",True, "YES")
 trace24 = maketrace("Mask Non-compliant and not Social Distancing", nomasklat, nomasklon, iddf, "red", "circle", "No Mask Data",True, "NO")
-trace25 = maketrace("Mask Compliance and Social Distancing Unknown", unknownlat, unknownlon, iddf, "blue", "circle", "Unknown data",True, "UNKNOWN")
+trace25 = maketrace("Mask Compliance and Social Distancing Unknown", unknownlat, unknownlon, iddf, "purple", "circle", "Unknown data",True, "UNKNOWN")
 
 
 layout = dict(
@@ -1001,6 +1005,7 @@ layout = dict(
     hovermode="closest",
     # plot_bgcolor="#191A1A",
     # paper_bgcolor="#020202",
+
     mapbox=dict(
 
         accesstoken=mapbox_access_token,
@@ -1008,12 +1013,14 @@ layout = dict(
             lat=39.68,
             lon=-75.75
         ),
+
         pitch=0,
         zoom=13.5,
 
     ),
 
 )
+
 fig.update_layout(
     autosize=True,
 
@@ -1040,6 +1047,7 @@ labels = ["Buildings", "All Data", "", "", "8/20/2020<br>Time Stamp:<br>11:32:54
           "9/22/2020<br>Time Stamp:<br>10:47:42 AM - 12:48:08 PM", "", "",
           "9/28/2020<br>Time Stamp:<br>11:54:20 AM - 12:53:33 PM", "", "", ]
 figure = go.Figure(data=data, layout=layout)
+
 steps = []
 num_steps = 24
 

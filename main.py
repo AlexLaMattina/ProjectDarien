@@ -949,7 +949,7 @@ def makeborder(name, lats, lons, dataframe, color, shape, group, showlegend, sd,
         hoverinfo="lon+lat+text",
         # SPECS
         marker=dict(
-            size=18,
+            size=15,
             color=color,
             symbol=shape,
             opacity=0.8,
@@ -961,7 +961,7 @@ def makeborder(name, lats, lons, dataframe, color, shape, group, showlegend, sd,
     )
 
 
-def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd, mask):
+def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd, mask, date):
     return Scattermapbox(
 
         name=name,
@@ -970,6 +970,7 @@ def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd
         lon=lats,
         lat=lons,
         text="ID: " + dataframe['ID'].astype(
+            str) + "<br>Date: " + date['date'].astype(
             str) + "<br>Social Distance Compliance: " + sd + "<br>Mask Compliance: " + mask,
         hoverinfo="lon+lat+text",
         # SPECS
@@ -1044,6 +1045,10 @@ socdistandnmasklat = []
 nsocdistandnmasklon = []
 nsocdistandnmasklat = []
 allids = []
+maskandsddate = []
+maskandnsddate = []
+socdistandnmaskdate = []
+nsocdistandnmaskdate = []
 
 for i in pf.index:
     allids.append(pf['id'][i])
@@ -1051,18 +1056,28 @@ for i in pf.index:
         if pf["socialdist 0=no, 1=yes"][i] == 1:
             maskandsdlat.append(pf['LAT'][i])
             maskandsdlon.append(pf['LON'][i])
+            maskandsddate.append(pf['date'][i])
         elif pf["socialdist 0=no, 1=yes"][i] == 0:
             maskandnsdlat.append(pf['LAT'][i])
             maskandnsdlon.append(pf['LON'][i])
+            maskandnsddate.append(pf['date'][i])
     if pf["withmask 0=no, 1=yes"][i] == 0:
         if pf["socialdist 0=no, 1=yes"][i] == 1:
             socdistandnmasklat.append(pf['LAT'][i])
             socdistandnmasklon.append(pf['LON'][i])
+            socdistandnmaskdate.append(pf['date'][i])
         elif pf["socialdist 0=no, 1=yes"][i] == 0:
             nsocdistandnmasklat.append(pf['LAT'][i])
             nsocdistandnmasklon.append(pf['LON'][i])
+            nsocdistandnmaskdate.append(pf['date'][i])
+
 
 alliddf = DataFrame(allids, columns=['ID'])
+mandsd = DataFrame(maskandsddate, columns=['date'])
+mandnsd = DataFrame(maskandnsddate, columns=['date'])
+sdandnm = DataFrame(socdistandnmaskdate, columns=['date'])
+nsdandnm = DataFrame(nsocdistandnmaskdate, columns=['date'])
+
 trace25 = makeborder("none", maskandsdlat, maskandsdlon, alliddf, "blue", "circle", "Nan", False, "YES", "YES")
 trace26 = makeborder("none", socdistandnmasklat, socdistandnmasklon, alliddf, "blue", "circle", "Nan", False, "YES",
                      "NO")
@@ -1072,16 +1087,16 @@ trace28 = makeborder("none", nsocdistandnmasklat, nsocdistandnmasklon, alliddf, 
 
 trace29 = makeborder2("Wearing Mask and Social Distancing", maskandsdlat, maskandsdlon, alliddf, "blue", "circle",
                       "Nan",
-                      False, "YES", "YES")
+                      False, "YES", "YES", mandsd)
 
 trace30 = makeborder2("Not Wearing Mask and Social Distancing", socdistandnmasklat, socdistandnmasklon, alliddf, "red",
-                      "circle", "Nan", False, "YES", "NO")
+                      "circle", "Nan", False, "YES", "NO", sdandnm)
 
 trace31 = makeborder2("Wearing Mask and Not Social Distancing", maskandnsdlat, maskandnsdlon, alliddf, "blue", "circle",
-                      "Nan", False, "NO", "YES")
+                      "Nan", False, "NO", "YES", mandnsd)
 
 trace32 = makeborder2("Not Wearing Mask and Not Social Distancing", nsocdistandnmasklat, nsocdistandnmasklon, alliddf,
-                      "red", "circle", "Nan", False, "NO", "NO")
+                      "red", "circle", "Nan", False, "NO", "NO", nsdandnm)
 
 updatemenus = list([
     dict(active=0,
@@ -1099,7 +1114,9 @@ updatemenus = list([
                                      False, False, False, False, False, False, False, False, False, False, False,
                                      False, True, True, True, True, True, True, True, True]}]),  # hide trace1
 
-         ]))])
+         ]),
+         x=1,
+         )])
 
 layout = dict(
     title="COVID-19 Modeling Data<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each "

@@ -784,22 +784,22 @@ for i in pf.index:
                     date1unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '8/24/2020':
-        date2id.append(pf['id'][i])
+        date1id.append(pf['id'][i])
         for j in sf.index:
             if i == j:
                 if sf[
                     "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
                     i] == 1:
-                    date2masklon.append(pf['LON'][i])
-                    date2masklat.append(pf['LAT'][i])
+                    date1masklon.append(pf['LON'][i])
+                    date1masklat.append(pf['LAT'][i])
                 elif sf[
                     "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
                     i] == 0:
-                    date2nomasklon.append(pf['LON'][i])
-                    date2nomasklat.append(pf['LAT'][i])
+                    date1nomasklon.append(pf['LON'][i])
+                    date1nomasklat.append(pf['LAT'][i])
                 else:
-                    date2unknownlon.append(pf['LON'][i])
-                    date2unknownlat.append(pf['LAT'][i])
+                    date1unknownlon.append(pf['LON'][i])
+                    date1unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/03/2020':
         date3id.append(pf['id'][i])
@@ -988,16 +988,16 @@ def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd
 
 
 date1df = DataFrame(date1id, columns=['ID'])
-trace2 = maketrace("8/20/2020 ", date1masklat, date1masklon, date1df, "blue", "circle", "Mask Data", True, "YES")
-trace3 = maketrace("8/20/2020 ", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data", True, "NO")
-trace4 = maketrace("8/20/2020 ", date1unknownlat, date1unknownlon, date1df, "grey", "circle",
+trace2 = maketrace("8/20/2020 & 8/24/2020 ", date1masklat, date1masklon, date1df, "blue", "circle", "Mask Data", True, "YES")
+trace3 = maketrace("8/20/2020 & 8/24/2020", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data", True, "NO")
+trace4 = maketrace("8/20/2020 & 8/24/2020", date1unknownlat, date1unknownlon, date1df, "grey", "circle",
                    "Unknown data", True, "UNKNOWN")
 
-date2df = DataFrame(date2id, columns=['ID'])
-trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
-trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data", True, "NO")
-trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "grey", "circle",
-                   "Unknown data", True, "UNKNOWN")
+#date2df = DataFrame(date2id, columns=['ID'])
+#trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
+#trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data", True, "NO")
+#trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "grey", "circle",
+#                   "Unknown data", True, "UNKNOWN")
 
 date3df = DataFrame(date3id, columns=['ID'])
 trace8 = maketrace("9/03/2020", date3masklat, date3masklon, date3df, "blue", "circle", "Mask Data", True, "YES")
@@ -1028,11 +1028,11 @@ trace20 = maketrace("9/28/2020", date7masklat, date7masklon, date7df, "blue", "c
 trace21 = maketrace("9/28/2020", date7nomasklat, date7nomasklon, date7df, "red", "circle", "No Mask Data", True, "NO")
 
 iddf = DataFrame(ids, columns=['ID'])
-trace22 = maketrace("Mask Compliant and Social Distancing", masklat, masklon, iddf, "blue", "circle", "Mask Data", True,
+trace22 = maketrace("Mask Compliant and<br>Social Distancing", masklat, masklon, iddf, "blue", "circle", "Mask Data", True,
                     "YES")
-trace23 = maketrace("Mask Non-compliant and not Social Distancing", nomasklat, nomasklon, iddf, "red", "circle",
+trace23 = maketrace("Mask Non-compliant and<br>not Social Distancing", nomasklat, nomasklon, iddf, "red", "circle",
                     "No Mask Data", True, "NO")
-trace24 = maketrace("Mask Compliance and Social Distancing Unknown", unknownlat, unknownlon, iddf, "grey", "circle",
+trace24 = maketrace("Mask Compliance and<br>Social Distancing Unknown", unknownlat, unknownlon, iddf, "grey", "circle",
                     "Unknown data", True, "UNKNOWN")
 
 ####################SPLIT UP DATA INTO FOUR CATEGORIES############################
@@ -1104,13 +1104,13 @@ updatemenus = list([
          buttons=list([
              dict(label="Overall<br>Compliance",
                   method="restyle",
-                  args=[{"visible": [False, True, True, True, False, False, False, False, False, False, False, False,
+                  args=[{"visible": [False, True, True, True, False, False, False, False, False,
                                      False, False, False, False, False, False, False, False, False, False, False,
                                      False, False, False, False, False, False, False, False, False]}]),
              # hide trace2
              dict(label="Mask and<br>Social Distance<br>Options",
                   method="restyle",
-                  args=[{"visible": [False, False, False, False, False, False, False, False, False, False, False, False,
+                  args=[{"visible": [False, False, False, False, False, False, False, False, False,
                                      False, False, False, False, False, False, False, False, False, False, False,
                                      False, True, True, True, True, True, True, True, True]}]),  # hide trace1
 
@@ -1123,7 +1123,7 @@ layout = dict(
           "Date<br>Hover Over Points for More Information",
     autosize=True,
     height=875,
-    width=1400,
+    width=1475,
     margin=dict(l=80, r=80, t=100, b=80),
 
     # showlegend=True,
@@ -1161,21 +1161,21 @@ fig.update_layout(
     hovermode="x unified",
 
 )
-data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9,
+data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4,  trace8, trace9,
         trace10, trace11, trace12, trace13, trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21,
         trace25, trace26, trace27, trace28, trace29, trace30, trace31, trace32]
 labels = ["Buildings", "All Data", "", "",
-          "8/20/2020<br>Time Stamp:<br>11:32:54 AM - 12:50:24 PM ", "", "",
-          "8/24/2020<br>Time Stamp:<br>11:58:01 AM - 12:41:00 PM", "", "",
-          "9/03/2020<br>Time Stamp:<br>11:19:36 AM - 12:35:48 PM", "", "",
-          "9/11/2020<br>Time Stamp:<br>11:09:11 AM - 12:18:43 PM",
-          "", "", "9/16/2020<br>Time Stamp:<br>10:32:17 AM - 12:44:41 PM", "", "",
-          "9/22/2020<br>Time Stamp:<br>10:47:42 AM - 12:48:08 PM", "", "",
-          "9/28/2020<br>Time Stamp:<br>11:54:20 AM - 12:53:33 PM", "", "", ]
+          "8/20/2020 & 8/24/2020<br>Time Stamps: <br>12:00:34 PM - 12:01:29 PM<br>12:01:29 PM - 12:10:35 PM",
+          #"8/20/2020<br>Time Stamp:<br>12:00:34 PM - 12:01:29 PM<br>8/24/2020<br>Time Stamp:<br>12:01:29 -12:10:35 PM",
+          "", "", "9/03/2020<br>Time Stamp:<br>11:22:15 AM - 12:18:59 PM", "", "",
+          "9/11/2020<br>Time Stamp:<br>11:06:49 AM - 12:13:04 PM",
+          "", "", "9/16/2020<br>Time Stamp:<br>11:15:17 AM - 12:50:24 PM", "", "",
+          "9/22/2020<br>Time Stamp:<br>11:12:42 AM - 12:14:38 PM", "", "",
+          "9/28/2020<br>Time Stamp:<br>11:31:30 AM - 12:31:33 PM", "", "", ]
 
 figure = go.Figure(data=data, layout=layout)
 steps = []
-num_steps = 24
+num_steps = 21
 
 for i in range(1, num_steps, 3):
     step = dict(
@@ -1207,7 +1207,7 @@ sliders = [dict(
 
 )]
 steps = []
-num_steps = 7
+num_steps = 6
 for i in range(num_steps):
     step = dict(
         label=dates[i],

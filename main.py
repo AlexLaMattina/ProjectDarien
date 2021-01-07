@@ -901,7 +901,7 @@ trace1 = Scattermapbox(
     hoverinfo="lon+lat+text",
     # SPECS
     marker=dict(
-
+        symbol='square',
         # BASIC
         size=12,
         color='black',
@@ -985,6 +985,28 @@ def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd
         showlegend=showlegend,
 
     )
+def makeborder3(name, lats, lons, color, shape, group, showlegend):
+    return Scattermapbox(
+
+        name=name,
+        mode="markers",
+
+        lon=lats,
+        lat=lons,
+
+        # SPECS
+        marker=dict(
+            size=15,
+            color=color,
+            symbol=shape,
+            opacity=0.8,
+        ),
+
+        legendgroup=group,
+        showlegend=showlegend,
+
+    )
+
 
 
 date1df = DataFrame(date1id, columns=['ID'])
@@ -1098,6 +1120,16 @@ trace31 = makeborder2("Wearing Mask and Not Social Distancing", maskandnsdlat, m
 trace32 = makeborder2("Not Wearing Mask and Not Social Distancing", nsocdistandnmasklat, nsocdistandnmasklon, alliddf,
                       "red", "circle", "Nan", False, "NO", "NO", nsdandnm)
 
+empty=[]
+trace33 = makeborder3("Wearing a Mask", maskandsdlon, maskandsdlat, "blue", "circle", "Nan", True)
+
+trace34 = makeborder3("Not Wearing a Mask", socdistandnmasklon, socdistandnmasklat, "red", "circle", "Nan", True)
+
+trace35 = makeborder3("Social Distancing", maskandnsdlon, maskandnsdlat, "blue", "circle-open", "Nan", True)
+
+trace36 = makeborder3("Not Social Distancing", nsocdistandnmasklon, nsocdistandnmasklat, "red", "circle-open", "Nan", True)
+
+
 updatemenus = list([
     dict(active=0,
          showactive=True,
@@ -1106,13 +1138,14 @@ updatemenus = list([
                   method="restyle",
                   args=[{"visible": [False, True, True, True, False, False, False, False, False,
                                      False, False, False, False, False, False, False, False, False, False, False,
-                                     False, False, False, False, False, False, False, False, False]}]),
+                                     False, False, False, False, False, False, False, False, False, False, False,
+                                     False, False]}]),
              # hide trace2
              dict(label="Mask and<br>Social Distance<br>Options",
                   method="restyle",
                   args=[{"visible": [False, False, False, False, False, False, False, False, False,
                                      False, False, False, False, False, False, False, False, False, False, False,
-                                     False, True, True, True, True, True, True, True, True]}]),  # hide trace1
+                                     False, True, True, True, True, True, True, True, True, True, True, True, True]}]),
 
          ]),
          x=1,
@@ -1163,7 +1196,7 @@ fig.update_layout(
 )
 data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4,  trace8, trace9,
         trace10, trace11, trace12, trace13, trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21,
-        trace25, trace26, trace27, trace28, trace29, trace30, trace31, trace32]
+        trace25, trace26, trace27, trace28, trace29, trace30, trace31, trace32, trace33, trace34, trace35, trace36]
 labels = ["Buildings", "All Data", "", "",
           "8/20/2020 & 8/24/2020<br>Time Stamps: <br>12:00:34 PM - 12:01:29 PM<br>12:01:29 PM - 12:10:35 PM",
           #"8/20/2020<br>Time Stamp:<br>12:00:34 PM - 12:01:29 PM<br>8/24/2020<br>Time Stamp:<br>12:01:29 -12:10:35 PM",

@@ -23,6 +23,7 @@ url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Buil
 url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
 url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
 url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
+url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Percentages%20by%20week.csv'
 
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
@@ -46,638 +47,166 @@ af = pd.read_csv(url3, dtype={"date": "string",
 sf = pd.read_csv(url4, dtype={"id": "int",
                               "Masksd 0=Mask Non-Complient and Not Social Distancing; "
                               "1 = Mask Complient and Social Distancing; 9= could not be determined": "int"})
-dates = pf["date"].unique()
-dates = list(sorted(dates.astype(str)))
+per = pd.read_csv(url5, dtype={"studyweek": "float", "activity": "float", "withmask": "float", "maskincorrect": "float",
+                               "notsocialdist": "float", "ageover55": "float", "percentmale": "float", "percentobese":
+                                   "float", "percentnonwhite": "float", "percenttouchedsurface": "float",
+                               "percenttouchedface": "float", "percentnotcomliantsdmask": "float"})
+# dates = pf["date"].unique()
+# dates = list(sorted(dates.astype(str)))
 
-activities = pf["activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding"].unique()
-activities = list(activities.astype(int))
 
 afdate = pf["date"]
 afact = pf["activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding"]
 activitieslist = list(zip(afdate, afact))
 activitieslist.sort()
 
-maskvals = pf["withmask 0=no, 1=yes"]
-maskvallist = list(zip(afdate, maskvals))
-
-correctmaskvals = pf["nomaskimpr 0=no mask or mask but incorrect, 1=mask and correct"]
-correctmaskvalslist = list(zip(afdate, correctmaskvals))
-
-noseandmouthvals = pf["maskreason 1=nose exposed, 2=nose and mouth exposed"]
-noseandmouthvalslist = list(zip(afdate, noseandmouthvals))
-
-socialdistvals = pf["socialdist 0=no, 1=yes"]
-socialdistvalslist = list(zip(afdate, socialdistvals))
-
-agegroupvals = pf["agegroup 1=<18, 2=18-30, 3=31-55, 4=>55"]
-agegroupvalslist = list(zip(afdate, agegroupvals))
-
-gendervals = pf["sex 1=male, 2=female"]
-gendervalslist = list(zip(afdate, gendervals))
-
-smoking = pf["smoking 0= not smoking, 1=smoking"]
-smoking = list(smoking.astype(int))
-
-obese = pf["obese 0=not overweight/obese, 1=overweight/obese"]
-obese = list(obese.astype(int))
-
-touchsurface = pf["touchsurface 0=no, 1=yes"]
-touchsurface = list(touchsurface.astype(int))
-
-etiquette = pf["Etiquette1 0=no hands to head, 1= hands to head"]
-etiquette = list(etiquette.astype(int))
-
 # Still need to add mask other, gender, surface type, fix mouth exposed, and direction?
 
 fig = go.Figure()
-fig = make_subplots(rows=2, cols=5, subplot_titles=("Mask Wearing", "Correct Mask Wearing",
-                                                    "Exposed Noses and Mouths",
-                                                    "Number of Different Activities",
-                                                    "Number of People Touching Surfaces",
-                                                    "Number of People Social Distancing", "Number of People Obese",
-                                                    "Number of Different Genders",
-                                                    # "Number of People With Etiquette",
-                                                    "Number of People Smoking",
-                                                    "Number of Different Age Groups"))
+fig = make_subplots(rows=3, cols=4, subplot_titles=("Percent of People Wearing Masks",
+                                                    "Percent of People Wearing Masks Incorrectly",
+                                                    "Percent of People Non-Compliant<br>(Mask and Social Distancing)",
+                                                    "Percent of People Engaged in Activities",
+                                                    "Percent of People Touching Surfaces",
+                                                    "Percent of People Touching their Face",
+                                                    "Percent of People Not Social Distancing",
+                                                    "Percent of People Obese",
+                                                    "Percent of Males",
+                                                    "Percent of Nonwhite People",
+                                                    "Percent of People over 55 Years Old"))
 
 for i in fig['layout']['annotations']:
     i['font'] = dict(size=10)
 
-pf["smoking 0= not smoking, 1=smoking"].replace(9, np.NaN, inplace=True)
-pf["smoking 0= not smoking, 1=smoking"].replace(0, np.NaN, inplace=True)
+wearingmaskper = []
+incorrectmaskper = []
+noncompliantper = []
+activityper = []
+touchsurfper = []
+touchfaceper = []
+notsocialdistper = []
+obeseper = []
+malesper = []
+nonwhiteper = []
+over55per = []
 
-pf["obese 0=not overweight/obese, 1=overweight/obese"].replace(9, np.NaN, inplace=True)
-pf["obese 0=not overweight/obese, 1=overweight/obese"].replace(0, np.NaN, inplace=True)
+for i in per.index:
+    wearingmaskper.append(per['withmask'][i])
+    incorrectmaskper.append(per['maskincorrect'][i])
+    noncompliantper.append(per['percentnotcomliantsdmask'][i])
+    activityper.append(per['activity'][i])
+    touchsurfper.append(per['percenttouchedsurface'][i])
+    touchfaceper.append(per['percenttouchedface'][i])
+    notsocialdistper.append(per['notsocialdist'][i])
+    obeseper.append(per['percentobese'][i])
+    malesper.append(per['percentmale'][i])
+    nonwhiteper.append(per['percentnonwhite'][i])
+    over55per.append(per['ageover55'][i])
 
-pf["touchsurface 0=no, 1=yes"].replace(9, np.NaN, inplace=True)
-pf["touchsurface 0=no, 1=yes"].replace(0, np.NaN, inplace=True)
+dates = ["8/20/2020 & 8/24/2020", "9/03/2020", "9/11/2020", "9/16/2020", "9/22/2020", "9/28/2020"]
 
-pf["Etiquette1 0=no hands to head, 1= hands to head"].replace(9, np.NaN, inplace=True)
-pf["Etiquette1 0=no hands to head, 1= hands to head"].replace(0, np.NaN, inplace=True)
-
-numofsmoking = pf.groupby("date").count()["smoking 0= not smoking, 1=smoking"]
-
-numofobese = pf.groupby("date").count()["obese 0=not overweight/obese, 1=overweight/obese"]
-
-numoftouchsurface = pf.groupby("date").count()["touchsurface 0=no, 1=yes"]
-
-numofetiquette = pf.groupby("date").count()["Etiquette1 0=no hands to head, 1= hands to head"]
-numwearingmask = []
-numnotwearingmask = []
-
-# MASK WEARING TREND
-numofmasks = defaultdict(list)
-
-for d, a in maskvallist:
-    numofmasks[d].append(a)
-
-numwithmasklist = []
-for d, a in numofmasks.items():
-    for i in a:
-        if i == 1:
-            numwearingmask.append(i)
-    numwithmasklist.append((numwearingmask.count(1)))
-    numwearingmask = []
-
-withmasklist = []
-withmasklist = pd.Series(numwithmasklist, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(withmasklist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People With Masks",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=1)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Wearing Masks",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=wearingmaskper, ),
+    row=1,
+    col=1)
 # NO MASK WEARING TREND
 
 
-numwithnomasklist = []
-for d, a in numofmasks.items():
-    for i in a:
-        if i == 0:
-            numnotwearingmask.append(i)
-    numwithnomasklist.append((numnotwearingmask.count(0)))
-    numnotwearingmask = []
-
-withnomasklist = []
-withnomasklist = pd.Series(numwithnomasklist, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(withnomasklist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Without Masks",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=1)
-
-numcorrectmask = []
-numincorrectmask = []
-# CORRECT WEARING TREND
-numofcorrect = defaultdict(list)
-
-for d, a in correctmaskvalslist:
-    numofcorrect[d].append(a)
-
-numcorrectmasklist = []
-for d, a in numofcorrect.items():
-    for i in a:
-        if i == 1:
-            numcorrectmask.append(i)
-    numcorrectmasklist.append((numcorrectmask.count(1)))
-    numcorrectmask = []
-
-correctmasklist = []
-correctmasklist = pd.Series(numcorrectmasklist, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(correctmasklist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Wearing Masks Correctly",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=2)
-# CHANGE ROW AND COL
-
+fig.append_trace(go.Scatter(
+    hovertext="Percent Wearing Masks Incorrectly",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=incorrectmaskper, ),
+    row=1,
+    col=2)
 # INCORRECT WEARING TREND
-numincorrectmasklist = []
-for d, a in numofcorrect.items():
-    for i in a:
-        if i == 0:
-            numincorrectmask.append(i)
-    numincorrectmasklist.append((numincorrectmask.count(0)))
-    numincorrectmask = []
 
-incorrectmasklist = []
-incorrectmasklist = pd.Series(numincorrectmasklist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(incorrectmasklist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Wearing Masks Inorrectly",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=2)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Non Compliant",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=noncompliantper, ),
+    row=1,
+    col=3)
 
-# CHANGE ROW AND COL
+fig.append_trace(go.Scatter(
+    hovertext="Percent Doing an Activity",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=activityper, ),
+    row=1,
+    col=4)
 
-numexposednoses = []
-numexposedmouth = []
-# Num of exposed noses TREND
-numofexposednose = defaultdict(list)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Touching Surfaces",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=touchsurfper),
+    row=2,
+    col=1)
 
-for d, a in noseandmouthvalslist:
-    numofexposednose[d].append(a)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Touching Own Face",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=touchfaceper),
+    row=2,
+    col=2)
 
-numexposednoselist = []
-for d, a in numofexposednose.items():
-    for i in a:
-        if i == 1:
-            numexposednoses.append(i)
-    numexposednoselist.append(numexposednoses.count(1))
-    numexposednoses = []
-exposednoselist = []
-exposednoselist = pd.Series(numexposednoselist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(exposednoselist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="Exposed Noses",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=3)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Not Social Distancing",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=notsocialdistper),
+    row=2,
+    col=3)
 
-# Num of exposed noses and mouths TREND
+fig.append_trace(go.Scatter(
+    hovertext="Percent Obese",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=obeseper, ),
+    row=2,
+    col=4)
 
-numexposednoseandmouthlist = []
-for d, a in numofexposednose.items():
-    for i in a:
-        if i == 2:
-            numexposedmouth.append(i)
-    numexposednoseandmouthlist.append(numexposedmouth.count(2))
-    numexposedmouth = []
+fig.append_trace(go.Scatter(
+    hovertext="Percent Male",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=malesper),
+    row=3,
+    col=1)
 
-exposedmouthlist = []
-exposedmouthlist = pd.Series(numexposednoseandmouthlist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(exposedmouthlist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="Exposed Nose and Mouths",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=1,
-        col=3)
+fig.append_trace(go.Scatter(
+    hovertext="Percent Non-White",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=nonwhiteper),
+    row=3,
+    col=2)
 
-numsocialdistance = []
-numnotsocialdistance = []
-# Num of Social distancing trend
+fig.append_trace(go.Scatter(
+    hovertext="Percent Over 55 years old",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=over55per),
+    row=3,
+    col=3)
 
-numsocialdist = defaultdict(list)
-
-for d, a in socialdistvalslist:
-    numsocialdist[d].append(a)
-
-numsocialdistlist = []
-for d, a in numsocialdist.items():
-    for i in a:
-        if i == 1:
-            numsocialdistance.append(i)
-    numsocialdistlist.append((numsocialdistance.count(1)))
-    numsocialdistance = []
-
-socialdistancelist = []
-socialdistancelist = pd.Series(numsocialdistlist, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(socialdistancelist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Social Distancing",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),
-        row=2,
-        col=1)
-# Num Not Social distancing trend
-
-
-numnotsocialdistlist = []
-for d, a in numsocialdist.items():
-    for i in a:
-        if i == 0:
-            numnotsocialdistance.append(i)
-    numnotsocialdistlist.append((numnotsocialdistance.count(0)))
-    numnotsocialdistance = []
-
-notsocialdistancelist = []
-notsocialdistancelist = pd.Series(numnotsocialdistlist, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(notsocialdistancelist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Not Social Distancing",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),
-        row=2,
-        col=1)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(numofsmoking.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Smoking",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),
-        row=2,
-        col=4)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(numofobese.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Who Are Obese",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace, ),
-        row=2,
-        col=2)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(numoftouchsurface.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Touching Surfaces",
-        name="",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),
-        row=1,
-        col=5)
-
-numofgender = defaultdict(list)
-
-# Number of male TREND
-for d, a in gendervalslist:
-    numofgender[d].append(a)
-
-nummalelist = []
-nummale = []
-for d, a in numofgender.items():
-    for i in a:
-        if i == 1:
-            nummale.append(i)
-    nummalelist.append((nummale.count(1)))
-    nummale = []
-
-numofmalelist = []
-numofmalelist = pd.Series(nummalelist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(numofmalelist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="Males",
-        name="",  # "Number of People With Etiquette",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),  # numofetiquette),
-        row=2,
-        col=3)
-numfemalelist = []
-numfemale = []
-for d, a in numofgender.items():
-    for i in a:
-        if i == 2:
-            numfemale.append(i)
-    numfemalelist.append((numfemale.count(2)))
-    numfemale = []
-
-numoffemalelist = []
-numoffemalelist = pd.Series(numfemalelist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(numoffemalelist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="Females",
-        name="",  # "Number of People With Etiquette",
-        mode='lines+markers',
-        x=dates,
-        y=masktrace),  # numofetiquette),
-        row=2,
-        col=3)
-
-numnotmoving = []
-numwalking = []
-numrunning = []
-numbiking = []
-numskate = []
-numofactivities = defaultdict(list)
-
-# NOTMOVING TREND
-for d, a in activitieslist:
-    numofactivities[d].append(a)
-
-numnotmovinglist = []
-for d, a in numofactivities.items():
-    for i in a:
-        if i == 1:
-            numnotmoving.append(i)
-    numnotmovinglist.append((numnotmoving.count(1)))
-    numnotmoving = []
-
-notmovinglist = []
-notmovinglist = pd.Series(numnotmovinglist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(notmovinglist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        name="Not Moving",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace,
-    ),
-        row=1,
-        col=4
-
-    )
-
-# WALKING TREND
-numwalkinglist = []
-for d, a in numofactivities.items():
-    for i in a:
-        if i == 2:
-            numwalking.append(i)
-    numwalkinglist.append((numwalking.count(2)))
-    numwalking = []
-
-walkinglist = []
-walkinglist = pd.Series(numwalkinglist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(walkinglist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        name="Walking",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=1,
-        col=4
-
-    )
-
-# RUNNING TREND
-numrunninglist = []
-for d, a in numofactivities.items():
-    for i in a:
-        if i == 3:
-            numrunning.append(i)
-    numrunninglist.append((numrunning.count(3)))
-    numrunning = []
-
-runninglist = []
-runninglist = pd.Series(numrunninglist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(runninglist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        name="Running",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=1,
-        col=4
-
-    )
-
-# BIKING TREND
-numbikinglist = []
-for d, a in numofactivities.items():
-    for i in a:
-        if i == 4:
-            numbiking.append(i)
-    numbikinglist.append((numbiking.count(4)))
-    numbiking = []
-
-bikinglist = []
-bikinglist = pd.Series(numbikinglist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(bikinglist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        name="Biking",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=1,
-        col=4
-
-    )
-
-# SKATEBOARDING TREND
-numskatelist = []
-for d, a in numofactivities.items():
-    for i in a:
-        if i == 6:
-            numskate.append(i)
-    numskatelist.append((numskate.count(6)))
-    numskate = []
-
-skatelist = []
-skatelist = pd.Series(numskatelist, index=dates)
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(skatelist.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        name="SkateBoarding",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=1,
-        col=4
-
-    )
-lessthan18 = []
-# Agegroup trend agegroupvals=pf["agegroup 1=<18, 2=18-30, 3=31-55, 4=>55"]
-numofages = defaultdict(list)
-
-for d, a in agegroupvalslist:
-    numofages[d].append(a)
-
-numlessthan18 = []
-for d, a in numofages.items():
-    for i in a:
-        if i == 1:
-            lessthan18.append(i)
-    numlessthan18.append((lessthan18.count(1)))
-    lessthan18 = []
-
-lessthan18list = []
-lessthan18list = pd.Series(numlessthan18, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(lessthan18list.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Less than or equal to 18 Years old",
-        name="",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=2,
-        col=5
-
-    )
-lessthan30 = []
-numlessthan30 = []
-for d, a in numofages.items():
-    for i in a:
-        if i == 2:
-            lessthan30.append(i)
-    numlessthan30.append((lessthan30.count(2)))
-    lessthan30 = []
-
-lessthan30list = []
-lessthan30list = pd.Series(numlessthan30, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(lessthan30list.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Between 18 and 30 years old",
-        name="",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace, ),
-        row=2,
-        col=5
-
-    )
-lessthan55 = []
-numlessthan55 = []
-for d, a in numofages.items():
-    for i in a:
-        if i == 3:
-            lessthan55.append(i)
-    numlessthan55.append((lessthan55.count(3)))
-    lessthan55 = []
-
-lessthan55list = []
-lessthan55list = pd.Series(numlessthan55, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(lessthan55list.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Between 30 and 55 years old",
-        name="",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace),
-        row=2,
-        col=5
-
-    )
-morethan55 = []
-nummorethan55 = []
-for d, a in numofages.items():
-    for i in a:
-        if i == 4:
-            morethan55.append(i)
-    nummorethan55.append((morethan55.count(4)))
-    morethan55 = []
-
-morethan55list = []
-morethan55list = pd.Series(nummorethan55, index=dates)
-
-masktrace = []
-for i in range(len(dates)):
-    masktrace.append(morethan55list.get(key=dates[i]))
-    fig.append_trace(go.Scatter(
-        hovertext="People Greater than or equal to 55 Years old",
-        name="",
-        mode="lines+markers",
-        x=dates,
-        y=masktrace, ),
-        row=2,
-        col=5
-
-    )
-steps = []
-num_steps = 5
-for i in range(num_steps):
-    step = dict(
-        method='restyle',
-        args=['visible', [False] * len(fig.data)],
-    )
-    step['args'][1][i] = True
-    step['args'][1][i + num_steps] = True
-    steps.append(step)
-
-slidersfig = [dict(steps=steps, )]
 
 ###########################################################################
 
@@ -770,12 +299,14 @@ for i in pf.index:
         for j in sf.index:
             if i == j:
                 if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 1:
                     date1masklon.append(pf['LON'][i])
                     date1masklat.append(pf['LAT'][i])
                 elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 0:
                     date1nomasklon.append(pf['LON'][i])
                     date1nomasklat.append(pf['LAT'][i])
@@ -788,12 +319,14 @@ for i in pf.index:
         for j in sf.index:
             if i == j:
                 if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 1:
                     date1masklon.append(pf['LON'][i])
                     date1masklat.append(pf['LAT'][i])
                 elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 0:
                     date1nomasklon.append(pf['LON'][i])
                     date1nomasklat.append(pf['LAT'][i])
@@ -806,12 +339,14 @@ for i in pf.index:
         for j in sf.index:
             if i == j:
                 if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 1:
                     date3masklon.append(pf['LON'][i])
                     date3masklat.append(pf['LAT'][i])
                 elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 0:
                     date3nomasklon.append(pf['LON'][i])
                     date3nomasklat.append(pf['LAT'][i])
@@ -824,12 +359,14 @@ for i in pf.index:
         for j in sf.index:
             if i == j:
                 if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 1:
                     date4masklon.append(pf['LON'][i])
                     date4masklat.append(pf['LAT'][i])
                 elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 0:
                     date4nomasklon.append(pf['LON'][i])
                     date4nomasklat.append(pf['LAT'][i])
@@ -842,12 +379,14 @@ for i in pf.index:
         for j in sf.index:
             if i == j:
                 if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 1:
                     date5masklon.append(pf['LON'][i])
                     date5masklat.append(pf['LAT'][i])
                 elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= could not be determined"][
+                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
+                    "9= could not be determined"][
                     i] == 0:
                     date5nomasklon.append(pf['LON'][i])
                     date5nomasklat.append(pf['LAT'][i])
@@ -985,6 +524,8 @@ def makeborder2(name, lats, lons, dataframe, color, shape, group, showlegend, sd
         showlegend=showlegend,
 
     )
+
+
 def makeborder3(name, lats, lons, color, shape, group, showlegend):
     return Scattermapbox(
 
@@ -1008,17 +549,18 @@ def makeborder3(name, lats, lons, color, shape, group, showlegend):
     )
 
 
-
 date1df = DataFrame(date1id, columns=['ID'])
-trace2 = maketrace("8/20/2020 & 8/24/2020 ", date1masklat, date1masklon, date1df, "blue", "circle", "Mask Data", True, "YES")
-trace3 = maketrace("8/20/2020 & 8/24/2020", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data", True, "NO")
+trace2 = maketrace("8/20/2020 & 8/24/2020 ", date1masklat, date1masklon, date1df, "blue", "circle", "Mask Data", True,
+                   "YES")
+trace3 = maketrace("8/20/2020 & 8/24/2020", date1nomasklat, date1nomasklon, date1df, "red", "circle", "No Mask Data",
+                   True, "NO")
 trace4 = maketrace("8/20/2020 & 8/24/2020", date1unknownlat, date1unknownlon, date1df, "grey", "circle",
                    "Unknown data", True, "UNKNOWN")
 
-#date2df = DataFrame(date2id, columns=['ID'])
-#trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
-#trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data", True, "NO")
-#trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "grey", "circle",
+# date2df = DataFrame(date2id, columns=['ID'])
+# trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
+# trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data", True, "NO")
+# trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "grey", "circle",
 #                   "Unknown data", True, "UNKNOWN")
 
 date3df = DataFrame(date3id, columns=['ID'])
@@ -1050,7 +592,8 @@ trace20 = maketrace("9/28/2020", date7masklat, date7masklon, date7df, "blue", "c
 trace21 = maketrace("9/28/2020", date7nomasklat, date7nomasklon, date7df, "red", "circle", "No Mask Data", True, "NO")
 
 iddf = DataFrame(ids, columns=['ID'])
-trace22 = maketrace("Mask Compliant and<br>Social Distancing", masklat, masklon, iddf, "blue", "circle", "Mask Data", True,
+trace22 = maketrace("Mask Compliant and<br>Social Distancing", masklat, masklon, iddf, "blue", "circle", "Mask Data",
+                    True,
                     "YES")
 trace23 = maketrace("Mask Non-compliant and<br>not Social Distancing", nomasklat, nomasklon, iddf, "red", "circle",
                     "No Mask Data", True, "NO")
@@ -1093,7 +636,6 @@ for i in pf.index:
             nsocdistandnmasklon.append(pf['LON'][i])
             nsocdistandnmaskdate.append(pf['date'][i])
 
-
 alliddf = DataFrame(allids, columns=['ID'])
 mandsd = DataFrame(maskandsddate, columns=['date'])
 mandnsd = DataFrame(maskandnsddate, columns=['date'])
@@ -1120,15 +662,15 @@ trace31 = makeborder2("Wearing Mask and Not Social Distancing", maskandnsdlat, m
 trace32 = makeborder2("Not Wearing Mask and Not Social Distancing", nsocdistandnmasklat, nsocdistandnmasklon, alliddf,
                       "red", "circle", "Nan", False, "NO", "NO", nsdandnm)
 
-empty=[]
+empty = []
 trace33 = makeborder3("Wearing a Mask", maskandsdlon, maskandsdlat, "blue", "circle", "Nan", True)
 
 trace34 = makeborder3("Not Wearing a Mask", socdistandnmasklon, socdistandnmasklat, "red", "circle", "Nan", True)
 
 trace35 = makeborder3("Social Distancing", maskandnsdlon, maskandnsdlat, "blue", "circle-open", "Nan", True)
 
-trace36 = makeborder3("Not Social Distancing", nsocdistandnmasklon, nsocdistandnmasklat, "red", "circle-open", "Nan", True)
-
+trace36 = makeborder3("Not Social Distancing", nsocdistandnmasklon, nsocdistandnmasklat, "red", "circle-open", "Nan",
+                      True)
 
 updatemenus = list([
     dict(active=0,
@@ -1152,8 +694,13 @@ updatemenus = list([
          )])
 
 layout = dict(
-    title="COVID-19 Modeling Data<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each "
-          "Date<br>Hover Over Points for More Information",
+    title="COVID-19 Modeling Data                                                                                      "
+          "                            Use the date slider to see the data split up by date"
+          "<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date                   "
+          "                                                                 Use the maps dropdown menu to view overall "
+          "compliance "                                                                                    
+          "<br>Hover Over Points for More Information                                                           "
+          "                                   or to switch to see mask and social distancing options",
     autosize=True,
     height=875,
     width=1475,
@@ -1194,12 +741,11 @@ fig.update_layout(
     hovermode="x unified",
 
 )
-data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4,  trace8, trace9,
+data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4, trace8, trace9,
         trace10, trace11, trace12, trace13, trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21,
         trace25, trace26, trace27, trace28, trace29, trace30, trace31, trace32, trace33, trace34, trace35, trace36]
 labels = ["Buildings", "All Data", "", "",
           "8/20/2020 & 8/24/2020<br>Time Stamps: <br>12:00:34 PM - 12:01:29 PM<br>12:01:29 PM - 12:10:35 PM",
-          #"8/20/2020<br>Time Stamp:<br>12:00:34 PM - 12:01:29 PM<br>8/24/2020<br>Time Stamp:<br>12:01:29 -12:10:35 PM",
           "", "", "9/03/2020<br>Time Stamp:<br>11:22:15 AM - 12:18:59 PM", "", "",
           "9/11/2020<br>Time Stamp:<br>11:06:49 AM - 12:13:04 PM",
           "", "", "9/16/2020<br>Time Stamp:<br>11:15:17 AM - 12:50:24 PM", "", "",
@@ -1236,10 +782,10 @@ sliders = [dict(
         prefix="Date : ",
         xanchor="right",
         visible=True,
-    ),
+    ), )]
 
-)]
 steps = []
+
 num_steps = 6
 for i in range(num_steps):
     step = dict(
@@ -1248,27 +794,18 @@ for i in range(num_steps):
         args=['visible', [False] * len(fig.data)],
     )
     step['args'][1][i] = True
-    step['args'][1][i + num_steps] = True
-    step['args'][1][i + 2 * num_steps] = True
-    step['args'][1][i + 3 * num_steps] = True
-    step['args'][1][i + 4 * num_steps] = True
-    step['args'][1][i + 5 * num_steps] = True
-    step['args'][1][i + 6 * num_steps] = True
-    step['args'][1][i + 7 * num_steps] = True
-    step['args'][1][i + 8 * num_steps] = True
-    step['args'][1][i + 9 * num_steps] = True
-    step['args'][1][i + 10 * num_steps] = True
-    step['args'][1][i + 11 * num_steps] = True
-    step['args'][1][i + 12 * num_steps] = True
-    step['args'][1][i + 13 * num_steps] = True
-    step['args'][1][i + 14 * num_steps] = True
-    step['args'][1][i + 15 * num_steps] = True
-    step['args'][1][i + 16 * num_steps] = True
-    step['args'][1][i + 17 * num_steps] = True
-    step['args'][1][i + 18 * num_steps] = True
-    step['args'][1][i + 19 * num_steps] = True
-    step['args'][1][i + 20 * num_steps] = True
-    step['args'][1][i + 21 * num_steps] = True
+    #step['args'][1][i + num_steps] = True
+    #step['args'][1][i + 2 * num_steps] = True
+    #step['args'][1][i + 3 * num_steps] = True
+    #step['args'][1][i + 4 * num_steps] = True
+    #step['args'][1][i + 5 * num_steps] = True
+    #step['args'][1][i + 6 * num_steps] = True
+    #step['args'][1][i + 7 * num_steps] = True
+    #step['args'][1][i + 8 * num_steps] = True
+    #step['args'][1][i + 9 * num_steps] = True
+    #step['args'][1][i + 10 * num_steps] = True
+    # step['args'][1][i + 11 * num_steps] = True
+
     steps.append(step)
 
 slidersfig = [dict(steps=steps,
@@ -1280,7 +817,10 @@ slidersfig = [dict(steps=steps,
 
                    ), y=-.15, )]
 
-fig.layout.sliders = slidersfig
+# fig.layout.sliders = slidersfig
+fig.update_yaxes(range=[0, 100])
+
+
 figure.layout.sliders = sliders
 
 server = Flask(__name__)
@@ -1305,7 +845,7 @@ app.layout = html.Div(children=[
         dcc.Graph(
             figure=fig,
             style={
-                'height': 900,
+                'height': 950,
             },
         ),
     ]),

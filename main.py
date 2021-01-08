@@ -23,8 +23,7 @@ url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Buil
 url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
 url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
 url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
-url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Percentages%20by%20week.csv'
-
+url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Percentagesbyweek.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
                               "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int",
@@ -63,17 +62,19 @@ activitieslist.sort()
 # Still need to add mask other, gender, surface type, fix mouth exposed, and direction?
 
 fig = go.Figure()
-fig = make_subplots(rows=3, cols=4, subplot_titles=("Percent of People Wearing Masks",
-                                                    "Percent of People Wearing Masks Incorrectly",
-                                                    "Percent of People Non-Compliant<br>(Mask and Social Distancing)",
-                                                    "Percent of People Engaged in Activities",
-                                                    "Percent of People Touching Surfaces",
-                                                    "Percent of People Touching their Face",
-                                                    "Percent of People Not Social Distancing",
-                                                    "Percent of People Obese",
-                                                    "Percent of Males",
-                                                    "Percent of Nonwhite People",
-                                                    "Percent of People over 55 Years Old"))
+fig = make_subplots(rows=3, cols=4, subplot_titles=("Percent of Total Described With a Mask",
+                                                    "Percent of all Those Wearing a Mask Incorrectly",
+                                                    "Percent of Total Described Not Compliant with Regulations<br>"
+                                                    "(Mask Incorrect/No Mask + Not Social Distancing = Non-compliant)",
+                                                    "Percent of Total Described Moving<br>(Walking, Biking, Running)",
+                                                    "Percent of Total Described Touching Surfaces",
+                                                    "Percent of Total Described Touching their Face",
+                                                    "Percent of Total Described Not Social Distancing<br>"
+                                                    "(<6 Feet From Someone)",
+                                                    "Percent of Total Described Obese",
+                                                    "Percent of Total Described Male",
+                                                    "Percent of Total Described Nonwhite",
+                                                    "Percent of Total Described 55 Plus Years of Age"))
 
 for i in fig['layout']['annotations']:
     i['font'] = dict(size=10)
@@ -102,6 +103,7 @@ for i in per.index:
     malesper.append(per['percentmale'][i])
     nonwhiteper.append(per['percentnonwhite'][i])
     over55per.append(per['ageover55'][i])
+
 
 dates = ["8/20/2020 & 8/24/2020", "9/03/2020", "9/11/2020", "9/16/2020", "9/22/2020", "9/28/2020"]
 
@@ -190,7 +192,7 @@ fig.append_trace(go.Scatter(
     col=1)
 
 fig.append_trace(go.Scatter(
-    hovertext="Percent Non-White",
+    hovertext="Percent Nonwhite",
     name="",
     mode='lines+markers',
     x=dates,
@@ -694,17 +696,46 @@ updatemenus = list([
          )])
 
 layout = dict(
-    title="COVID-19 Modeling Data                                                                                      "
-          "                            Use the date slider to see the data split up by date"
-          "<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date                   "
-          "                                                                 Use the maps dropdown menu to view overall "
-          "compliance "                                                                                    
-          "<br>Hover Over Points for More Information                                                           "
-          "                                   or to switch to see mask and social distancing options",
+    title="COVID-19 Modeling Data",
+         # "<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date"
+         # "<br>Hover Over Points for More Information",
     autosize=True,
     height=875,
     width=1475,
     margin=dict(l=80, r=80, t=100, b=80),
+    annotations=[
+        go.layout.Annotation(
+            text='Use the maps dropdown menu to switch to see each Data Points Mask and Social Distancing '
+                 'Characteristics<br>'
+                 'OR to see compliance with UD regulations:'
+                 'Non-Compliant: Mask incorrect/No mask plus not social distancing<br>'
+                 'Compliant: Social Distancing (regardless of having a mask)'
+                 'OR not social distancing with a mask worn correctly ',
+            align='left',
+            bordercolor='black',
+            x=1.15,
+            y=1.1,
+            showarrow=False,
+        ),
+        go.layout.Annotation(
+            text='Use the slider to see the data split up by each date',
+            align='left',
+            x=.15,
+            y=-.15,
+            bordercolor='black'
+
+        ),
+        go.layout.Annotation(
+            text='Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date'
+            '<br>Hover Over Points for More Information',
+            align='left',
+            x=.0,
+            y=1.08,
+            bordercolor='black',
+            showarrow=False,
+
+        )
+    ],
 
     # showlegend=True,
     hovermode="closest",

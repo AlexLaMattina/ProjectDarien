@@ -701,7 +701,7 @@ layout = dict(
          # "<br>Hover Over Points for More Information",
     autosize=True,
     height=875,
-    width=1475,
+    width=1500,
     margin=dict(l=80, r=80, t=100, b=80),
     annotations=[
         go.layout.Annotation(

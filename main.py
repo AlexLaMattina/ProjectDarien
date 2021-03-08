@@ -23,7 +23,7 @@ url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Buil
 url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
 url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
 url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
-url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Percentagesbyweek.csv'
+url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PercentageFall2020.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
                               "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int",
@@ -46,12 +46,17 @@ af = pd.read_csv(url3, dtype={"date": "string",
 sf = pd.read_csv(url4, dtype={"id": "int",
                               "Masksd 0=Mask Non-Complient and Not Social Distancing; "
                               "1 = Mask Complient and Social Distancing; 9= could not be determined": "int"})
-per = pd.read_csv(url5, dtype={"studyweek": "float", "activity": "float", "withmask": "float", "maskincorrect": "float",
-                               "notsocialdist": "float", "ageover55": "float", "percentmale": "float", "percentobese":
-                                   "float", "percentnonwhite": "float", "percenttouchedsurface": "float",
-                               "percenttouchedface": "float", "percentnotcomliantsdmask": "float"})
-# dates = pf["date"].unique()
-# dates = list(sorted(dates.astype(str)))
+per = pd.read_csv(url5, dtype={"semester 1=fall 2=spring": "float",
+                               "studyweek 1=baseline": "float",
+                               "activity % moving (walk, run, bike)": "float",
+                               "withmask % with a mask": "float",
+                               "maskincorrect (% without mask or with mask but worn incorrectly)": "float",
+                               "notphysicaldist (% < 6 ft from someone)": "float",
+                               "percentnotcomliantsdmask (% non-compliant with mask wearing and physical distancing)": "float",
+                               "ageover55": "float",
+                               "percentmale": "float",
+                               "percentobese": "float",
+                               "percentnonwhite": "float", })
 
 
 afdate = pf["date"]
@@ -59,53 +64,54 @@ afact = pf["activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboard
 activitieslist = list(zip(afdate, afact))
 activitieslist.sort()
 
-# Still need to add mask other, gender, surface type, fix mouth exposed, and direction?
 
 fig = go.Figure()
-fig = make_subplots(rows=3, cols=4, subplot_titles=("Percent of Total Described With a Mask",
-                                                    "Percent of all Those Wearing a Mask Incorrectly",
-                                                    "Percent of Total Described Not Compliant with Regulations<br>"
-                                                    "(Mask Incorrect/No Mask + Not Social Distancing = Non-compliant)",
-                                                    "Percent of Total Described Moving<br>(Walking, Biking, Running)",
-                                                    "Percent of Total Described Touching Surfaces",
-                                                    "Percent of Total Described Touching their Face",
+fig = make_subplots(rows=3, cols=3, subplot_titles=("Percent of Total Described Moving",
+                                                    "Percent of Total Described With a Mask",
+                                                    "Percent of Total Described Wearing a Mask Incorrectly",
                                                     "Percent of Total Described Not Social Distancing<br>"
                                                     "(<6 Feet From Someone)",
-                                                    "Percent of Total Described Obese",
+                                                    "Percent of Total Described Not Compliant with Regulations",
+                                                    "Percent of Total Described Over the Age 55",
                                                     "Percent of Total Described Male",
-                                                    "Percent of Total Described Nonwhite",
-                                                    "Percent of Total Described 55 Plus Years of Age"))
+                                                    "Percent of Total Described Obese",
+                                                    "Percent of Total Described Non-white"))
 
 for i in fig['layout']['annotations']:
     i['font'] = dict(size=10)
 
+activityper = []
 wearingmaskper = []
 incorrectmaskper = []
-noncompliantper = []
-activityper = []
-touchsurfper = []
-touchfaceper = []
 notsocialdistper = []
-obeseper = []
+notcompliantper = []
+ageper = []
 malesper = []
+obeseper = []
 nonwhiteper = []
-over55per = []
 
 for i in per.index:
-    wearingmaskper.append(per['withmask'][i])
-    incorrectmaskper.append(per['maskincorrect'][i])
-    noncompliantper.append(per['percentnotcomliantsdmask'][i])
-    activityper.append(per['activity'][i])
-    touchsurfper.append(per['percenttouchedsurface'][i])
-    touchfaceper.append(per['percenttouchedface'][i])
-    notsocialdistper.append(per['notsocialdist'][i])
+    wearingmaskper.append(per['withmask % with a mask'][i])
+    incorrectmaskper.append(per['maskincorrect (% without mask or with mask but worn incorrectly)'][i])
+    notcompliantper.append(per['percentnotcomliantsdmask (% non-compliant with mask wearing and physical distancing)'][i])
+    activityper.append(per['activity % moving (walk, run, bike)'][i])
+    notsocialdistper.append(per['notphysicaldist (% < 6 ft from someone)'][i])
     obeseper.append(per['percentobese'][i])
     malesper.append(per['percentmale'][i])
     nonwhiteper.append(per['percentnonwhite'][i])
-    over55per.append(per['ageover55'][i])
+    ageper.append(per['ageover55'][i])
 
 
 dates = ["8/20/2020 & 8/24/2020", "9/03/2020", "9/11/2020", "9/16/2020", "9/22/2020", "9/28/2020"]
+
+fig.append_trace(go.Scatter(
+    hovertext="Percent Doing an Activity",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=activityper, ),
+    row=1,
+    col=1)
 
 fig.append_trace(go.Scatter(
     hovertext="Percent Wearing Masks",
@@ -114,7 +120,7 @@ fig.append_trace(go.Scatter(
     x=dates,
     y=wearingmaskper, ),
     row=1,
-    col=1)
+    col=2)
 # NO MASK WEARING TREND
 
 
@@ -125,44 +131,8 @@ fig.append_trace(go.Scatter(
     x=dates,
     y=incorrectmaskper, ),
     row=1,
-    col=2)
-# INCORRECT WEARING TREND
-
-fig.append_trace(go.Scatter(
-    hovertext="Percent Non Compliant",
-    name="",
-    mode='lines+markers',
-    x=dates,
-    y=noncompliantper, ),
-    row=1,
     col=3)
 
-fig.append_trace(go.Scatter(
-    hovertext="Percent Doing an Activity",
-    name="",
-    mode='lines+markers',
-    x=dates,
-    y=activityper, ),
-    row=1,
-    col=4)
-
-fig.append_trace(go.Scatter(
-    hovertext="Percent Touching Surfaces",
-    name="",
-    mode='lines+markers',
-    x=dates,
-    y=touchsurfper),
-    row=2,
-    col=1)
-
-fig.append_trace(go.Scatter(
-    hovertext="Percent Touching Own Face",
-    name="",
-    mode='lines+markers',
-    x=dates,
-    y=touchfaceper),
-    row=2,
-    col=2)
 
 fig.append_trace(go.Scatter(
     hovertext="Percent Not Social Distancing",
@@ -171,16 +141,26 @@ fig.append_trace(go.Scatter(
     x=dates,
     y=notsocialdistper),
     row=2,
-    col=3)
+    col=1)
 
 fig.append_trace(go.Scatter(
-    hovertext="Percent Obese",
+    hovertext="Percent Non-Compliant",
     name="",
     mode='lines+markers',
     x=dates,
-    y=obeseper, ),
+    y=notcompliantper, ),
     row=2,
-    col=4)
+    col=2)
+
+
+fig.append_trace(go.Scatter(
+    hovertext="Percent Over the Age of 55",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=ageper),
+    row=2,
+    col=3)
 
 fig.append_trace(go.Scatter(
     hovertext="Percent Male",
@@ -192,23 +172,22 @@ fig.append_trace(go.Scatter(
     col=1)
 
 fig.append_trace(go.Scatter(
-    hovertext="Percent Nonwhite",
+    hovertext="Percent Obese",
+    name="",
+    mode='lines+markers',
+    x=dates,
+    y=obeseper, ),
+    row=3,
+    col=2)
+
+fig.append_trace(go.Scatter(
+    hovertext="Percent NonWhite",
     name="",
     mode='lines+markers',
     x=dates,
     y=nonwhiteper),
     row=3,
-    col=2)
-
-fig.append_trace(go.Scatter(
-    hovertext="Percent Over 55 years old",
-    name="",
-    mode='lines+markers',
-    x=dates,
-    y=over55per),
-    row=3,
     col=3)
-
 
 ###########################################################################
 

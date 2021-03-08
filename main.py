@@ -21,9 +21,8 @@ server = flask.Flask(__name__)
 
 url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/BuildingData.csv'
 url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
-url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PeopleActivity.csv'
-url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
-url5 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PercentageFall2020.csv'
+url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
+url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PercentageFall2020.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
 pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
                               "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int",
@@ -41,12 +40,10 @@ pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int",
                               "surfacetype 1=trash can, 2=parking meter, 3=door handle, 4=railing, 5=auto, "
                               "6=building, 7=other, 8=bench, 9=phone, 11=tools, 12=table": "int",
                               "Etiquette1 0=no hands to head, 1= hands to head": "int"})
-af = pd.read_csv(url3, dtype={"date": "string",
-                              "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int"})
-sf = pd.read_csv(url4, dtype={"id": "int",
+sf = pd.read_csv(url3, dtype={"id": "int",
                               "Masksd 0=Mask Non-Complient and Not Social Distancing; "
                               "1 = Mask Complient and Social Distancing; 9= could not be determined": "int"})
-per = pd.read_csv(url5, dtype={"semester 1=fall 2=spring": "float",
+per = pd.read_csv(url4, dtype={"semester 1=fall 2=spring": "float",
                                "studyweek 1=baseline": "float",
                                "activity % moving (walk, run, bike)": "float",
                                "withmask % with a mask": "float",
@@ -59,10 +56,6 @@ per = pd.read_csv(url5, dtype={"semester 1=fall 2=spring": "float",
                                "percentnonwhite": "float", })
 
 
-afdate = pf["date"]
-afact = pf["activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding"]
-activitieslist = list(zip(afdate, afact))
-activitieslist.sort()
 
 
 fig = go.Figure()
@@ -121,8 +114,6 @@ fig.append_trace(go.Scatter(
     y=wearingmaskper, ),
     row=1,
     col=2)
-# NO MASK WEARING TREND
-
 
 fig.append_trace(go.Scatter(
     hovertext="Percent Wearing Masks Incorrectly",
@@ -419,13 +410,11 @@ trace1 = Scattermapbox(
     text=df['Location'],
 
     hoverinfo="lon+lat+text",
-    # SPECS
     marker=dict(
-        symbol='square',
-        # BASIC
+        symbol='square-stroked',
         size=12,
         color='black',
-        opacity=0.8
+        opacity=1
     ),
     legendgroup="Buildings",
 
@@ -537,12 +526,6 @@ trace3 = maketrace("8/20/2020 & 8/24/2020", date1nomasklat, date1nomasklon, date
                    True, "NO")
 trace4 = maketrace("8/20/2020 & 8/24/2020", date1unknownlat, date1unknownlon, date1df, "grey", "circle",
                    "Unknown data", True, "UNKNOWN")
-
-# date2df = DataFrame(date2id, columns=['ID'])
-# trace5 = maketrace("8/24/2020 ", date2masklat, date2masklon, date2df, "blue", "circle", "Mask Data", True, "YES")
-# trace6 = maketrace("8/24/2020 ", date2nomasklat, date2nomasklon, date2df, "red", "circle", "No Mask Data", True, "NO")
-# trace7 = maketrace("8/24/2020", date2unknownlat, date2unknownlon, date2df, "grey", "circle",
-#                   "Unknown data", True, "UNKNOWN")
 
 date3df = DataFrame(date3id, columns=['ID'])
 trace8 = maketrace("9/03/2020", date3masklat, date3masklon, date3df, "blue", "circle", "Mask Data", True, "YES")
@@ -676,8 +659,7 @@ updatemenus = list([
 
 layout = dict(
     title="COVID-19 Modeling Data",
-         # "<br>Click<a href=\"https://www.weather.gov/\"> here </a>to Check the Weather on Each Date"
-         # "<br>Hover Over Points for More Information",
+
     autosize=True,
     height=875,
     width=1500,
@@ -716,11 +698,7 @@ layout = dict(
         )
     ],
 
-    # showlegend=True,
     hovermode="closest",
-    # plot_bgcolor="#191A1A",
-    # paper_bgcolor="#020202",
-
     mapbox=dict(
 
         accesstoken=mapbox_access_token,
@@ -738,9 +716,6 @@ layout = dict(
 
 fig.update_layout(
     autosize=True,
-
-    # plot_bgcolor="#191A1A",
-    # paper_bgcolor="#020202",
     margin=dict(
         t=50,
         l=100,
@@ -804,17 +779,6 @@ for i in range(num_steps):
         args=['visible', [False] * len(fig.data)],
     )
     step['args'][1][i] = True
-    #step['args'][1][i + num_steps] = True
-    #step['args'][1][i + 2 * num_steps] = True
-    #step['args'][1][i + 3 * num_steps] = True
-    #step['args'][1][i + 4 * num_steps] = True
-    #step['args'][1][i + 5 * num_steps] = True
-    #step['args'][1][i + 6 * num_steps] = True
-    #step['args'][1][i + 7 * num_steps] = True
-    #step['args'][1][i + 8 * num_steps] = True
-    #step['args'][1][i + 9 * num_steps] = True
-    #step['args'][1][i + 10 * num_steps] = True
-    # step['args'][1][i + 11 * num_steps] = True
 
     steps.append(step)
 
@@ -827,7 +791,6 @@ slidersfig = [dict(steps=steps,
 
                    ), y=-.15, )]
 
-# fig.layout.sliders = slidersfig
 fig.update_yaxes(range=[0, 100])
 
 

@@ -20,30 +20,23 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = flask.Flask(__name__)
 
 url = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/BuildingData.csv'
-url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/ProjectDarienData.csv'
-url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/SocialDistanceVar.csv'
-url4 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/PercentageFall2020.csv'
+url2 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Fall2020Data.csv'
+url3 = 'https://raw.githubusercontent.com/AlexLaMattina/ProjectDarien/master/Fall2020Percentages.csv'
 df = pd.read_csv(url, dtype={"Location": "string", "LON": "float", "LAT": "float"})
-pf = pd.read_csv(url2, dtype={"id": "int", "date": "string", "timeofday": "int", "LON": "float", "LAT": "float",
-                              "activity 1=not morving, 2=walking, 3=running, 4=biking, 6=skateboarding": "int",
-                              "direction 1=n, 2=s, 3=e, 4=w, 5=sw, 6=se, 7=nw, 8=ne": "int",
-                              "withmask 0=no, 1=yes": "int",
-                              "nomaskimpr 0=no mask or mask but incorrect, 1=mask and correct": "int",
-                              "maskreason 1=nose exposed, 2=nose and mouth exposed": "int",
-                              "maskother 1=exhalation valve or vent, 2=on forehead, 3=around neck, 4=touched mask, "
-                              "5=<2 years of age, 6=in hand, 7=hanging on ear": "int",
-                              "socialdist 0=no, 1=yes": "int", "agegroup 1=<18, 2=18-30, 3=31-55, 4=>55": "int",
-                              "white 0=not white, 1=white": "int", "sex 1=male, 2=female": "int",
-                              "smoking 0= not smoking, 1=smoking": "int",
-                              "obese 0=not overweight/obese, 1=overweight/obese": "int",
-                              "touchsurface 0=no, 1=yes": "int",
-                              "surfacetype 1=trash can, 2=parking meter, 3=door handle, 4=railing, 5=auto, "
-                              "6=building, 7=other, 8=bench, 9=phone, 11=tools, 12=table": "int",
-                              "Etiquette1 0=no hands to head, 1= hands to head": "int"})
-sf = pd.read_csv(url3, dtype={"id": "int",
-                              "Masksd 0=Mask Non-Complient and Not Social Distancing; "
-                              "1 = Mask Complient and Social Distancing; 9= could not be determined": "int"})
-per = pd.read_csv(url4, dtype={"semester 1=fall 2=spring": "float",
+pf = pd.read_csv(url2, dtype={"id": "int",
+                              "date": "string",
+                              "correcttod": "int",
+                              "LON": "float",
+                              "LAT": "float",
+                              "nomaskincor": "int",
+                              "socialdist": "int",
+                              "Masksd": "int",
+                              "agegroup": "int",
+                              "white": "int", "sex": "int",
+                              "sex": "int",
+                              "obese": "int"})
+
+per = pd.read_csv(url3, dtype={"semester 1=fall 2=spring": "float",
                                "studyweek 1=baseline": "float",
                                "activity % moving (walk, run, bike)": "float",
                                "withmask % with a mask": "float",
@@ -249,158 +242,99 @@ unknownlat = []
 
 for i in pf.index:
     ids.append(pf['id'][i])
-    for j in sf.index:
-        if i == j:
-            if sf[
-                "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= "
-                "could not be determined"][i] == 1:
-                masklon.append(pf['LON'][i])
-                masklat.append(pf['LAT'][i])
-            elif sf[
-                "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; 9= "
-                "could not be determined"][
-                i] == 0:
-                nomasklon.append(pf['LON'][i])
-                nomasklat.append(pf['LAT'][i])
-            else:
-                unknownlon.append(pf['LON'][i])
-                unknownlat.append(pf['LAT'][i])
+    if pf["Masksd"][i] == 1:
+        masklon.append(pf['LON'][i])
+        masklat.append(pf['LAT'][i])
+    elif pf["Masksd"][i] == 0:
+        nomasklon.append(pf['LON'][i])
+        nomasklat.append(pf['LAT'][i])
+    else:
+        unknownlon.append(pf['LON'][i])
+        unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '8/20/2020':
         date1id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 1:
-                    date1masklon.append(pf['LON'][i])
-                    date1masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 0:
-                    date1nomasklon.append(pf['LON'][i])
-                    date1nomasklat.append(pf['LAT'][i])
-                else:
-                    date1unknownlon.append(pf['LON'][i])
-                    date1unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date1masklon.append(pf['LON'][i])
+            date1masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date1nomasklon.append(pf['LON'][i])
+            date1nomasklat.append(pf['LAT'][i])
+        else:
+            date1unknownlon.append(pf['LON'][i])
+            date1unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '8/24/2020':
         date1id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 1:
-                    date1masklon.append(pf['LON'][i])
-                    date1masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 0:
-                    date1nomasklon.append(pf['LON'][i])
-                    date1nomasklat.append(pf['LAT'][i])
-                else:
-                    date1unknownlon.append(pf['LON'][i])
-                    date1unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date1masklon.append(pf['LON'][i])
+            date1masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date1nomasklon.append(pf['LON'][i])
+            date1nomasklat.append(pf['LAT'][i])
+        else:
+            date1unknownlon.append(pf['LON'][i])
+            date1unknownlat.append(pf['LAT'][i])
 
-    if pf['date'][i] == '9/03/2020':
+    if pf['date'][i] == '9/3/2020':
         date3id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 1:
-                    date3masklon.append(pf['LON'][i])
-                    date3masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 0:
-                    date3nomasklon.append(pf['LON'][i])
-                    date3nomasklat.append(pf['LAT'][i])
-                else:
-                    date3unknownlon.append(pf['LON'][i])
-                    date3unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date3masklon.append(pf['LON'][i])
+            date3masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date3nomasklon.append(pf['LON'][i])
+            date3nomasklat.append(pf['LAT'][i])
+        else:
+            date3unknownlon.append(pf['LON'][i])
+            date3unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/11/2020':
         date4id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 1:
-                    date4masklon.append(pf['LON'][i])
-                    date4masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 0:
-                    date4nomasklon.append(pf['LON'][i])
-                    date4nomasklat.append(pf['LAT'][i])
-                else:
-                    date4unknownlon.append(pf['LON'][i])
-                    date4unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date4masklon.append(pf['LON'][i])
+            date4masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date4nomasklon.append(pf['LON'][i])
+            date4nomasklat.append(pf['LAT'][i])
+        else:
+            date4unknownlon.append(pf['LON'][i])
+            date4unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/16/2020':
         date5id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 1:
-                    date5masklon.append(pf['LON'][i])
-                    date5masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; " \
-                    "9= could not be determined"][
-                    i] == 0:
-                    date5nomasklon.append(pf['LON'][i])
-                    date5nomasklat.append(pf['LAT'][i])
-                else:
-                    date5unknownlon.append(pf['LON'][i])
-                    date5unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date5masklon.append(pf['LON'][i])
+            date5masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date5nomasklon.append(pf['LON'][i])
+            date5nomasklat.append(pf['LAT'][i])
+        else:
+            date5unknownlon.append(pf['LON'][i])
+            date5unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/22/2020':
         date6id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; "
-                    "9= could not be determined"][i] == 1:
-                    date6masklon.append(pf['LON'][i])
-                    date6masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing; "
-                    "9= could not be determined"][i] == 0:
-                    date6nomasklon.append(pf['LON'][i])
-                    date6nomasklat.append(pf['LAT'][i])
-                else:
-                    date6unknownlon.append(pf['LON'][i])
-                    date6unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date6masklon.append(pf['LON'][i])
+            date6masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date6nomasklon.append(pf['LON'][i])
+            date6nomasklat.append(pf['LAT'][i])
+        else:
+            date6unknownlon.append(pf['LON'][i])
+            date6unknownlat.append(pf['LAT'][i])
 
     if pf['date'][i] == '9/28/2020':
         date7id.append(pf['id'][i])
-        for j in sf.index:
-            if i == j:
-                if sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing;"
-                    " 9= could not be determined"][i] == 1:
-                    date7masklon.append(pf['LON'][i])
-                    date7masklat.append(pf['LAT'][i])
-                elif sf[
-                    "Masksd 0=Mask Non-Complient and Not Social Distancing; 1 = Mask Complient and Social Distancing;"
-                    " 9= could not be determined"][i] == 0:
-                    date7nomasklon.append(pf['LON'][i])
-                    date7nomasklat.append(pf['LAT'][i])
-                else:
-                    date7unknownlon.append(pf['LON'][i])
-                    date7unknownlat.append(pf['LAT'][i])
+        if pf["Masksd"][i] == 1:
+            date7masklon.append(pf['LON'][i])
+            date7masklat.append(pf['LAT'][i])
+        elif pf["Masksd"][i] == 0:
+            date7nomasklon.append(pf['LON'][i])
+            date7nomasklat.append(pf['LAT'][i])
+        else:
+            date7unknownlon.append(pf['LON'][i])
+            date7unknownlat.append(pf['LAT'][i])
 
 trace1 = Scattermapbox(
     name="Buildings",
@@ -581,21 +515,21 @@ nsocdistandnmaskdate = []
 
 for i in pf.index:
     allids.append(pf['id'][i])
-    if pf["withmask 0=no, 1=yes"][i] == 1:
-        if pf["socialdist 0=no, 1=yes"][i] == 1:
+    if pf["nomaskincor"][i] == 1:
+        if pf["socialdist"][i] == 1:
             maskandsdlat.append(pf['LAT'][i])
             maskandsdlon.append(pf['LON'][i])
             maskandsddate.append(pf['date'][i])
-        elif pf["socialdist 0=no, 1=yes"][i] == 0:
+        elif pf["socialdist"][i] == 0:
             maskandnsdlat.append(pf['LAT'][i])
             maskandnsdlon.append(pf['LON'][i])
             maskandnsddate.append(pf['date'][i])
-    if pf["withmask 0=no, 1=yes"][i] == 0:
-        if pf["socialdist 0=no, 1=yes"][i] == 1:
+    if pf["nomaskincor"][i] == 0:
+        if pf["socialdist"][i] == 1:
             socdistandnmasklat.append(pf['LAT'][i])
             socdistandnmasklon.append(pf['LON'][i])
             socdistandnmaskdate.append(pf['date'][i])
-        elif pf["socialdist 0=no, 1=yes"][i] == 0:
+        elif pf["socialdist"][i] == 0:
             nsocdistandnmasklat.append(pf['LAT'][i])
             nsocdistandnmasklon.append(pf['LON'][i])
             nsocdistandnmaskdate.append(pf['date'][i])
@@ -658,7 +592,7 @@ updatemenus = list([
          )])
 
 layout = dict(
-    title="COVID-19 Modeling Data",
+    title="Fall 2020 COVID-19 Modeling Data",
 
     autosize=True,
     height=875,
@@ -730,11 +664,11 @@ data = [trace1, trace22, trace23, trace24, trace2, trace3, trace4, trace8, trace
         trace10, trace11, trace12, trace13, trace14, trace15, trace16, trace17, trace18, trace19, trace20, trace21,
         trace25, trace26, trace27, trace28, trace29, trace30, trace31, trace32, trace33, trace34, trace35, trace36]
 labels = ["Buildings", "All Data", "", "",
-          "8/20/2020 & 8/24/2020<br>Time Stamps: <br>12:00:34 PM - 12:01:29 PM<br>12:01:29 PM - 12:10:35 PM",
-          "", "", "9/03/2020<br>Time Stamp:<br>11:22:15 AM - 12:18:59 PM", "", "",
-          "9/11/2020<br>Time Stamp:<br>11:06:49 AM - 12:13:04 PM",
-          "", "", "9/16/2020<br>Time Stamp:<br>11:15:17 AM - 12:50:24 PM", "", "",
-          "9/22/2020<br>Time Stamp:<br>11:12:42 AM - 12:14:38 PM", "", "",
+          "8/20/2020 & 8/24/2020<br>Time Stamps:<br>11:32:54 AM - 12:50:24 PM<br>11:32:54 AM - 12:41:00 PM","", "",
+          "9/03/2020<br>Time Stamp:<br>11:22:15 AM - 12:18:59 PM", "", "",
+          "9/11/2020<br>Time Stamp:<br>11:06:49 AM - 12:13:04 PM", "", "",
+          "9/16/2020<br>Time Stamp:<br>11:15:17 AM - 12:16:41 PM", "", "",
+          "9/22/2020<br>Time Stamp:<br>11:12:42 AM - 12:25:08 PM", "", "",
           "9/28/2020<br>Time Stamp:<br>11:31:30 AM - 12:31:33 PM", "", "", ]
 
 figure = go.Figure(data=data, layout=layout)
